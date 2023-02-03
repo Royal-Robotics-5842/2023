@@ -3,5 +3,6 @@ Colin Rocks
 
 Contributors:
 Colin Rocks
-Cierra
-Xander
+Cierra Huthnance
+Xander Sore
+Krish Gupta
