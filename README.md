@@ -6,3 +6,4 @@ Colin Rocks
 Cierra Huthnance
 Xander Sore
 Krish Gupta
+Daniel Hall
