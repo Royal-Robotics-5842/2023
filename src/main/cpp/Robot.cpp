@@ -4,14 +4,19 @@
 
 #include "Robot.h"
 #include "Drivetrain.h"
+#include "Arm.h"
+#include "Intake.h"
 #include "frc/XboxController.h"
 
 #include <fmt/core.h>
+#include <iostream>
 
 #include <frc/smartdashboard/SmartDashboard.h>
 
 Drivetrain drivetrain;
 frc::XboxController controller{1};
+Arm arm;
+Intake intake;
 
 void Robot::RobotInit() 
 {
@@ -37,11 +42,58 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit() {}
 
+int armSetPoint = 0;
+double lastPosition = 0;
+
 void Robot::TeleopPeriodic() 
 {
+  arm.getMode() ? frc::SmartDashboard::PutString("Mode", "CUBE") : frc::SmartDashboard::PutString("Mode", "CONE");
 
-  drivetrain.drive(controller.GetLeftY(), controller.GetRightY());
+  drivetrain.cheesyDrive(controller.GetLeftY(), -1*controller.GetRightX(), controller.GetRightBumper());
 
+  //if we're in cone mode, intake exhausts a cube, so we need to invert intake controls when in cube mode so intake intakes always
+  int sign = arm.getMode() ? -1 : 1;
+  //intake overrides exhaust
+  if (controller.GetRightTriggerAxis() != 0)
+    intake.setSpeed(.5 * sign);
+  else if (controller.GetLeftTriggerAxis() != 0)
+    intake.setSpeed(-.5 * sign);
+  else
+    intake.setSpeed(0);
+
+  //toggle between cone preset heights and cube preset heights -- default is cube
+  //if limelight, also toggle vision mode when aiming between tape and tags
+  if (controller.GetLeftBumperPressed())
+    arm.toggleMode();
+
+  //manual control overrides position control
+  if (std::abs(controller.GetRightY()) > 0.1)
+  {
+    //manual control setpoint needed to not revert to the previous position once manual controls stop
+    armSetPoint = 0;
+    arm.setSpeed(-1*controller.GetRightY());
+    lastPosition = arm.getPosition();
+  }
+  else if (armSetPoint != 0)
+  {
+    //grab desired arm point on button press
+    //this is sticky (we retain the setpoint until another input is received or manual control is initiated)
+    if (controller.GetAButtonPressed())
+      armSetPoint = 1; //stowed
+    else if (controller.GetXButtonPressed())
+      armSetPoint = 2; //mid goal
+    else if (controller.GetYButtonPressed())
+      armSetPoint = 3; //high goal
+    else if (controller.GetBButtonPressed())
+      armSetPoint = 4; //human player
+    arm.setPosition(armSetPoint);
+  }
+  else
+  {
+    //arm.setPosition(lastPosition);
+    arm.setSpeed(0);
+  }
+  std::cout << "Last position: " << lastPosition << endl;
 }
 
 void Robot::DisabledInit() {}
