@@ -4,18 +4,20 @@ Arm::Arm()
 {
     mArmMotor.RestoreFactoryDefaults();
 
+    mArmMotor.SetSmartCurrentLimit(12);
+
     mArmMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
     mArmEncoder.SetPosition(0);
-    mArmEncoder.SetPositionConversionFactor(360/75);
+    mArmEncoder.SetPositionConversionFactor(360/Constants::armGearRatio);
 
-    mArmController.SetP(0.012819);
+    mArmController.SetP(0.012496);
     mArmController.SetI(0);
-    mArmController.SetD(0.00362);
+    mArmController.SetD(0.0062782);
     mArmController.SetFF(0);
     mArmController.SetIZone(0);
 
-    mSetPoint = -10; //stowed
+    mSetPoint = -110; //stowed
     mConeMode = false; //cube mode
 }
 
@@ -40,13 +42,24 @@ void Arm::toggleMode()
     mConeMode ^= true;
 }
 
+void Arm::brakeMode(bool input)
+{
+    mArmEncoder.SetPosition(0);
+
+    if (input)
+        mArmMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+    else
+        mArmMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
+
+}
+
 void Arm::setSpeed(double speed)
 {
     //deadzone handling -- ensures inputs are still within the range [0, 1] even after discarding the inputs up to 0.05
     double scaledSpeed = (speed + (speed < 0 ? 0.1 : -0.1)) / (1 - 0.1);
     speed = (std::abs(speed) > 0.1) ? scaledSpeed : 0;
 
-    mArmMotor.Set(speed*0.3333);
+    mArmMotor.Set(speed*.70);
 }
 
 void Arm::setPosition(int preset)
@@ -59,23 +72,29 @@ void Arm::setPosition(int preset)
         switch (preset)
         {
             case 1: //stowed
-                position = -10;
+                position = -20;
                 break;
             case 2: //mid goal
                 //mConeMode ? heightIfCone : heightIfCube;
-                position = mConeMode ? 50 : 40;
+                position = mConeMode ? 75 : 75;
                 break;
             case 3: //high goal
-                position = mConeMode ? 100 : 80;
+                position = mConeMode ? 148 : 148;
                 break;
             case 4: //human player
                 position = mConeMode ? 80 : 70;
                 break;
-            default: //manual override, hold position
+            /*default: //manual override, hold position
                 position = getPosition();
-                break;
+                break;*/
         }
         
-        mArmController.SetReference(position, rev::CANSparkMax::ControlType::kPosition, 0, mArmFF.Calculate(position*1_deg, 100_deg/1_s).value());
+        m_goal = {(position * 1_deg), 0_deg_per_s};
+        frc::TrapezoidProfile<units::degrees> profile{m_constraints, m_goal, m_setpoint};
+        m_setpoint = profile.Calculate(kDt);
+
+        std::cout << "Setpoint: " << m_setpoint.position.value() << std::endl; 
+        
+        mArmController.SetReference(m_setpoint.position.value(), rev::CANSparkMax::ControlType::kPosition, 0);// mArmFF.Calculate(m_setpoint.position.value()*1_deg, 100_deg/1_s).value());
     }
 }

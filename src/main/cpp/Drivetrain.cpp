@@ -19,8 +19,8 @@ Drivetrain::Drivetrain()
     mRightSlave.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
     //right motors are opposite left motors, so must spin other direction
-    //mLeftMaster.SetInverted(true);
-    //mLeftSlave.SetInverted(true);
+    mLeftMaster.SetInverted(false);
+    mLeftSlave.SetInverted(false);
 
     //set slaves to follow/mimic masters
     mLeftSlave.Follow(mLeftMaster);
@@ -58,31 +58,78 @@ void Drivetrain::drive(double left, double right)
     mRightMaster.Set(right);
 }
 
-void Drivetrain::cheesyDrive(double throttle, double wheel, bool quickTurn)
+void Drivetrain::cheesyDrive(double throttle, double wheel, bool isQuickTurn)
 {
-    //deadzone handling -- ensures inputs are still within the range [0, 1] even after discarding the inputs up to 0.05
-    double scaledThrottle = (throttle + (throttle < 0 ? 0.05 : -0.05)) / (1 - 0.05);
+    
+    //throttle = (throttle + (throttle < 0 ? 0.08 : -0.08)) / (1 - 0.08);
+    //wheel = (wheel + (wheel < 0 ? 0.08 : -0.08)) / (1 - 0.08);
+
+    double scaledThrottle = (throttle + (throttle < 0 ? 0.08 : -0.08)) / (1 - 0.08);
     throttle = (std::abs(throttle) > 0.05) ? scaledThrottle : 0;
 
-    double scaledWheel = (wheel + (wheel < 0 ? 0.05 : -0.05)) / (1 - 0.05);
-    wheel = (std::abs(wheel) > 0.05) ? scaledWheel : 0;
+    double scaledWheel = (wheel + (wheel < 0 ? 0.08 : -0.08)) / (1 - 0.08);
+    wheel = (std::abs(wheel) > 0.08) ? scaledWheel : 0;
 
-    // Apply a sin function that's scaled to make it feel better.
-    double wheelNonLinearity = 0.5;
+    double leftOutput, rightOutput;
+
+    //scales wheel component to make it more smooth
+    double wheelNonLinearity = 0.025;
     double denominator = std::sin(numbers::pi / 2.0 * wheelNonLinearity);
+    wheel = std::sin(numbers::pi / 2.0 * wheelNonLinearity * wheel) / denominator;
+    wheel = std::sin(numbers::pi / 2.0 * wheelNonLinearity * wheel) / denominator;
 
-    if (!quickTurn) {
-        wheel = std::sin(numbers::pi / 2.0 * wheelNonLinearity * wheel);
-        wheel = std::sin(numbers::pi / 2.0 * wheelNonLinearity * wheel);
-        wheel = wheel / (denominator * denominator) * std::abs(throttle);
+    double negInertia = 4 * (wheel - mOldWheel);
+    mOldWheel = wheel;
+    mNegInertiaAccumulator += negInertia;
+    wheel = wheel + mNegInertiaAccumulator;
+    if (mNegInertiaAccumulator > 1) {
+        mNegInertiaAccumulator -= 1;
+    } else if (mNegInertiaAccumulator < -1) {
+        mNegInertiaAccumulator += 1;
+    } else {
+        mNegInertiaAccumulator = 0;
     }
 
-    wheel *= 1;
+    double overPower;
+    if (isQuickTurn)
+    {
+        if (std::abs(throttle) < 0.5) 
+            mQuickStopAccumulator = (1 - .1) * mQuickStopAccumulator
+                + .1 * std::min(1.0, std::max(-1.0, wheel)) * 5;
+        overPower = 1.0;
+    } 
+    else 
+    {
+        overPower = 0.0;
+        wheel = std::abs(throttle) * wheel * 0.65 - mQuickStopAccumulator;
+        if (mQuickStopAccumulator > 1)
+            mQuickStopAccumulator -= 1;
+        else if (mQuickStopAccumulator < -1)
+            mQuickStopAccumulator += 1;
+        else
+            mQuickStopAccumulator = 0.0;
+    }
 
-    double rightOutput = throttle - wheel, leftOutput = throttle + wheel;
+    rightOutput = throttle - wheel, leftOutput = throttle + wheel;
+
+    if (leftOutput > 1.0) {
+        rightOutput -= overPower * (leftOutput - 1.0);
+        leftOutput = 1.0;
+    } else if (rightOutput > 1.0) {
+        leftOutput -= overPower * (rightOutput - 1.0);
+        rightOutput = 1.0;
+    } else if (leftOutput < -1.0) {
+        leftOutput = -1.0;
+    } else if (rightOutput < -1.0) {
+        leftOutput += overPower * (-1.0 - rightOutput);
+        rightOutput = -1.0;
+    }
+
     double scalingFactor = std::max(1.0, abs(throttle));
-
-    drive(leftOutput/scalingFactor, rightOutput/scalingFactor);
+    //cout << "left: " << leftOutput*3.8/scalingFactor << " right: " << rightOutput*3.8/scalingFactor << endl;
+    //tankDrive(leftOutput/scalingFactor, rightOutput/scalingFactor);
+    drivetrain.TankDrive(leftOutput/scalingFactor, rightOutput/scalingFactor);
+    drivetrain.Feed();
 }
 
 void Drivetrain::setVelocity(double left, double right)

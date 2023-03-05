@@ -52,8 +52,10 @@ public:
     static constexpr auto kLowGearRatio = 15.318627451;
     static constexpr auto kHighGearRatio = 7.083333333;
 
-    static constexpr auto kArmS = 0.22258 * 1_V;
-    static constexpr auto kArmG = 0.17754 * 1_V;
-    static constexpr auto kArmV = 0.025023 * 1_V / 1_rad_per_s;
+    static constexpr auto kArmS = 0.12855 * 1_V;
+    static constexpr auto kArmG = 0.14945 * 1_V;
+    static constexpr auto kArmV = 0.050359 * 1_V / 1_rad_per_s;
+
+    static constexpr auto armGearRatio = 150;
 
 };

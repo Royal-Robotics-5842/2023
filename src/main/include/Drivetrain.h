@@ -3,6 +3,8 @@
 #include <numbers>
 
 #include "frc/kinematics/DifferentialDriveOdometry.h"
+#include "frc/motorcontrol/MotorControllerGroup.h"
+#include "frc/drive/DifferentialDrive.h"
 #include "frc/smartdashboard/Field2d.h"
 #include "frc/smartdashboard/SmartDashboard.h"
 #include "rev/CANSparkMax.h"
@@ -24,6 +26,10 @@ class Drivetrain
     rev::SparkMaxPIDController mLeftController{mLeftMaster.GetPIDController()};
     rev::SparkMaxPIDController mRightController{mRightMaster.GetPIDController()};
 
+    frc::MotorControllerGroup mLeftSide{mLeftMaster, mLeftSlave};
+    frc::MotorControllerGroup mRightSide{mRightMaster, mRightSlave};
+    frc::DifferentialDrive drivetrain{mLeftSide, mRightSide};
+
     AHRS gyro{frc::SPI::Port::kMXP};
 
     //odometry
@@ -31,6 +37,10 @@ class Drivetrain
     frc::Pose2d mPose{{0_m, 0_m}, 0_rad};
     frc::Rotation2d mRotation{0_rad};
     frc::Field2d mField;
+
+    double mOldWheel = 0;
+    double mNegInertiaAccumulator = 0;
+    double mQuickStopAccumulator = 0;
 
 public:
     Drivetrain();

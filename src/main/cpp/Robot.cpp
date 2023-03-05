@@ -40,7 +40,9 @@ void Robot::AutonomousPeriodic()
 
 }
 
-void Robot::TeleopInit() {}
+void Robot::TeleopInit() {
+  arm.brakeMode(true);
+}
 
 int armSetPoint = 0;
 double lastPosition = 0;
@@ -66,13 +68,22 @@ void Robot::TeleopPeriodic()
   if (controller.GetLeftBumperPressed())
     arm.toggleMode();
 
+  if (controller.GetAButtonPressed())
+    armSetPoint = 1;
+  else if (controller.GetXButtonPressed())
+    armSetPoint = 2;
+  else if (controller.GetYButtonPressed())
+    armSetPoint = 3;
+  else if (controller.GetBButtonPressed())
+    armSetPoint = 4;
+
+  lastPosition = arm.getPosition();
   //manual control overrides position control
   if (std::abs(controller.GetRightY()) > 0.1)
   {
     //manual control setpoint needed to not revert to the previous position once manual controls stop
     armSetPoint = 0;
     arm.setSpeed(-1*controller.GetRightY());
-    lastPosition = arm.getPosition();
   }
   else if (armSetPoint != 0)
   {
@@ -93,16 +104,21 @@ void Robot::TeleopPeriodic()
     //arm.setPosition(lastPosition);
     arm.setSpeed(0);
   }
-  std::cout << "Last position: " << lastPosition << endl;
+  std::cout << "Arm position: " << arm.getPosition() << endl;
 }
 
-void Robot::DisabledInit() {}
+void Robot::DisabledInit() {
+}
 
 void Robot::DisabledPeriodic() {}
 
-void Robot::TestInit() {}
+void Robot::TestInit() {
+  arm.brakeMode(false);
+}
 
-void Robot::TestPeriodic() {}
+void Robot::TestPeriodic() {
+  std::cout << "Arm position: " << arm.getPosition() << endl;
+}
 
 void Robot::SimulationInit() {}
 
