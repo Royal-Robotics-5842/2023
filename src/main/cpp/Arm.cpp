@@ -36,6 +36,11 @@ double Arm::getPosition()
     return mArmEncoder.GetPosition();
 }
 
+void Arm::resetPosition()
+{
+    mArmEncoder.SetPosition(0);
+}
+
 void Arm::toggleMode()
 {
     //exclusive or/xor, one and only one true makes it true -- true ^ true = false, true ^ false = true
@@ -44,8 +49,6 @@ void Arm::toggleMode()
 
 void Arm::brakeMode(bool input)
 {
-    mArmEncoder.SetPosition(0);
-
     if (input)
         mArmMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     else

@@ -113,11 +113,18 @@ void Robot::DisabledInit() {
 void Robot::DisabledPeriodic() {}
 
 void Robot::TestInit() {
+  arm.resetPosition();
   arm.brakeMode(false);
+  arm.setSpeed(0);
 }
 
+//use test to set manually move the arm and zero it
 void Robot::TestPeriodic() {
   std::cout << "Arm position: " << arm.getPosition() << endl;
+
+  //Reset position once it's properly 0'd out
+  if (controller.GetAButtonPressed())
+    arm.resetPosition();
 }
 
 void Robot::SimulationInit() {}

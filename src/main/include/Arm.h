@@ -36,6 +36,7 @@ class Arm
     bool getMode();
     double getSetpoint();
     double getPosition();
+    void resetPosition();
 
     void toggleMode();
     void setSpeed(double speed);
