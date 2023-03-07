@@ -9,7 +9,7 @@ Arm::Arm()
     mArmMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
     mArmEncoder.SetPosition(0);
-    mArmEncoder.SetPositionConversionFactor(360/Constants::armGearRatio);
+    mArmEncoder.SetPositionConversionFactor(360/Constants::kArmGearRatio);
 
     mArmController.SetP(0.012496);
     mArmController.SetI(0);

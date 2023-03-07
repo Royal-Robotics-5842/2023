@@ -49,12 +49,11 @@ public:
 
     static constexpr double kWheelDiameter = 0.1524;
 
-    static constexpr auto kLowGearRatio = 8.45;
-
     static constexpr auto kArmS = 0.12855 * 1_V;
     static constexpr auto kArmG = 0.14945 * 1_V;
     static constexpr auto kArmV = 0.050359 * 1_V / 1_rad_per_s;
 
-    static constexpr auto armGearRatio = 150;
+    static constexpr auto kArmGearRatio = 150;
+    static constexpr auto kLowGearRatio = 8.45;
 
 };
