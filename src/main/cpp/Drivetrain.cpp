@@ -1,11 +1,28 @@
 #include "Drivetrain.h"
+#include <frc/trajectory/TrajectoryGenerator.h>
 
 Drivetrain::Drivetrain()
 {
     mLeftMaster.RestoreFactoryDefaults();
+    mLeftSlave.RestoreFactoryDefaults();
     mRightMaster.RestoreFactoryDefaults();
+    mRightSlave.RestoreFactoryDefaults();
 
-    mRightMaster.SetInverted(true);
+    mLeftMaster.SetSmartCurrentLimit(30);
+    mLeftSlave.SetSmartCurrentLimit(30);
+    mRightMaster.SetSmartCurrentLimit(30);
+    mRightSlave.SetSmartCurrentLimit(30);
+
+    mLeftMaster.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+    mLeftSlave.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+    mRightMaster.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+    mRightSlave.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+
+    mLeftMaster.SetInverted(false);
+    mLeftSlave.SetInverted(false);
+
+    mLeftSlave.Follow(mLeftMaster);
+    mRightSlave.Follow(mRightMaster);
 
     mLeftEncoder.SetPosition(0);
     mLeftEncoder.SetPositionConversionFactor((Constants::kWheelDiameter*numbers::pi)/Constants::kGearRatio);

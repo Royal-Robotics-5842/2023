@@ -14,7 +14,9 @@ using namespace std;
 class Drivetrain
 {
     rev::CANSparkMax mLeftMaster{11, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax mLeftSlave{13, rev::CANSparkMax::MotorType::kBrushless};
     rev::CANSparkMax mRightMaster{12, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax mRightSlave{14, rev::CANSparkMax::MotorType::kBrushless};
 
     rev::SparkMaxRelativeEncoder mLeftEncoder = mLeftMaster.GetEncoder();
     rev::SparkMaxRelativeEncoder mRightEncoder = mRightMaster.GetEncoder();
@@ -22,6 +24,10 @@ class Drivetrain
     rev::SparkMaxPIDController mLeftController = mLeftMaster.GetPIDController();
     rev::SparkMaxPIDController mRightController = mRightMaster.GetPIDController();
 
+    // frc::MotorControllerGroup mLeftSide{mLeftMaster, mLeftSlave};
+    // frc::MotorControllerGroup mRightSide{mRightMaster, mRightSlave};
+    // frc::DifferentialDrive drivetrain{mLeftSide, mRightSide};
+    
     AHRS gyro{frc::SPI::Port::kMXP};
 
     //odometry
