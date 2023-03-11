@@ -6,7 +6,7 @@
 #include "Drivetrain.h"
 #include "Arm.h"
 #include "Intake.h"
-#include "frc/XboxController.h"
+#include "CustomXboxController.h"
 
 #include <fmt/core.h>
 #include <iostream>
@@ -14,7 +14,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 
 Drivetrain drivetrain;
-frc::XboxController controller{1};
+frc::CustomXboxController controller{1};
 Arm arm;
 Intake intake;
 
@@ -102,7 +102,10 @@ void Robot::TeleopPeriodic()
     //arm.setPosition(lastPosition);
     arm.setSpeed(0);
   }
+
   std::cout << "Arm position: " << arm.getPosition() << endl;
+  std::cout << "Drivetrain Left Velocity: " << drivetrain.getLeftVelocity() << endl;
+  std::cout << "Drivetrain Right Velocity: " << drivetrain.getRightVelocity() << endl;
 }
 
 void Robot::DisabledInit() {
