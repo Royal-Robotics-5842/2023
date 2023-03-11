@@ -17,7 +17,7 @@ Arm::Arm()
     mArmController.SetFF(0);
     mArmController.SetIZone(0);
 
-    mSetPoint = -20; //stowed
+    mSetPoint = -15; //stowed
     mConeMode = false; //cube mode
 }
 
@@ -75,17 +75,17 @@ void Arm::setPosition(int preset)
         switch (preset)
         {
             case 1: //stowed
-                position = -20;
+                position = -15;
                 break;
             case 2: //mid goal
                 //mConeMode ? heightIfCone : heightIfCube;
-                position = mConeMode ? 75 : 75;
+                position = mConeMode ? 60 : 65;
                 break;
             case 3: //high goal
-                position = mConeMode ? 148 : 148;
+                position = mConeMode ? 110 : 110;
                 break;
-            case 4: //human player
-                position = mConeMode ? 80 : 70;
+            case 4: //low goal
+                position = mConeMode ? 18 : 23;
                 break;
             /*default: //manual override, hold position
                 position = getPosition();

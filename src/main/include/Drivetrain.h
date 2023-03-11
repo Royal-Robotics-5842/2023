@@ -7,6 +7,7 @@
 #include "frc/motorcontrol/MotorControllerGroup.h"
 #include "frc/smartdashboard/Field2d.h"
 #include "frc/smartdashboard/SmartDashboard.h"
+#include "frc2/command/PIDSubsystem.h"
 #include "rev/CANSparkMax.h"
 #include "frc2/command/PIDSubsystem.h"
 #include "AHRS.h"
