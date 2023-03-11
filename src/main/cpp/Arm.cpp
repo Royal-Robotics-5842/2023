@@ -17,7 +17,7 @@ Arm::Arm()
     mArmController.SetFF(0);
     mArmController.SetIZone(0);
 
-    mSetPoint = -110; //stowed
+    mSetPoint = -20; //stowed
     mConeMode = false; //cube mode
 }
 

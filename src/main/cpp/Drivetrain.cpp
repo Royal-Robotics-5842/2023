@@ -19,8 +19,10 @@ Drivetrain::Drivetrain()
     mRightSlave.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
     //right motors are opposite left motors, so must spin other direction
-    mLeftMaster.SetInverted(false);
-    mLeftSlave.SetInverted(false);
+    mLeftMaster.SetInverted(true);
+    mLeftSlave.SetInverted(true);
+    mRightMaster.SetInverted(false);
+    mRightSlave.SetInverted(false);
 
     //set slaves to follow/mimic masters
     mLeftSlave.Follow(mLeftMaster);
@@ -89,4 +91,14 @@ void Drivetrain::setVelocity(double left, double right)
 {
     mLeftController.SetReference(left, rev::CANSparkMax::ControlType::kVelocity);
     mRightController.SetReference(right, rev::CANSparkMax::ControlType::kVelocity);
+}
+
+double Drivetrain::getLeftVelocity()
+{
+    return mLeftEncoder.GetVelocity();
+}
+
+double Drivetrain::getRightVelocity()
+{
+    return mRightEncoder.GetVelocity();
 }
