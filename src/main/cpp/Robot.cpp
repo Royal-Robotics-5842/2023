@@ -67,13 +67,13 @@ void Robot::TeleopPeriodic()
     arm.toggleMode();
 
   if (controller.GetAButtonPressed())
-    armSetPoint = 1;
+    armSetPoint = 4;
   else if (controller.GetXButtonPressed())
     armSetPoint = 2;
   else if (controller.GetYButtonPressed())
     armSetPoint = 3;
   else if (controller.GetBButtonPressed())
-    armSetPoint = 4;
+    armSetPoint = 1;
 
   lastPosition = arm.getPosition();
   //manual control overrides position control
@@ -87,14 +87,6 @@ void Robot::TeleopPeriodic()
   {
     //grab desired arm point on button press
     //this is sticky (we retain the setpoint until another input is received or manual control is initiated)
-    if (controller.GetAButtonPressed())
-      armSetPoint = 1; //stowed
-    else if (controller.GetXButtonPressed())
-      armSetPoint = 2; //mid goal
-    else if (controller.GetYButtonPressed())
-      armSetPoint = 3; //high goal
-    else if (controller.GetBButtonPressed())
-      armSetPoint = 4; //human player
     arm.setPosition(armSetPoint);
   }
   else
