@@ -128,9 +128,6 @@ void Robot::TestPeriodic() {
   //Reset position once it's properly 0'd out
   if (controller.GetAButtonPressed())
     arm.resetPosition();
-
-  if (controller.GetDPAD() == 0)
-    std::cout << "DPAD UP" << endl;
 }
 
 void Robot::SimulationInit() {}
