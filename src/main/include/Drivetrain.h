@@ -46,5 +46,7 @@ public:
     void drive(double left, double right);
     void cheesyDrive(double throttle, double wheel, bool quickTurn);
     void setVelocity(double left, double right);
+    void autobalance();
+    void turntoangle(double angle);
 
 };
