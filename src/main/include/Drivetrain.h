@@ -8,6 +8,7 @@
 #include "frc/smartdashboard/Field2d.h"
 #include "frc/smartdashboard/SmartDashboard.h"
 #include "rev/CANSparkMax.h"
+#include "frc2/command/PIDSubsystem.h"
 #include "AHRS.h"
 #include "Constants.h"
 
@@ -29,6 +30,8 @@ class Drivetrain
 
     rev::SparkMaxPIDController mLeftController{mLeftMaster.GetPIDController()};
     rev::SparkMaxPIDController mRightController{mRightMaster.GetPIDController()};
+
+    frc2::PIDController turnPIDController{Constants::kP, 0.0, 0.0};
 
     AHRS gyro{frc::SPI::Port::kMXP};
 
