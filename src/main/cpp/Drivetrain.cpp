@@ -93,6 +93,7 @@ void Drivetrain::setVelocity(double left, double right)
     mRightController.SetReference(right, rev::CANSparkMax::ControlType::kVelocity);
 }
 
+
 double Drivetrain::getLeftVelocity()
 {
     return mLeftEncoder.GetVelocity();
@@ -101,4 +102,33 @@ double Drivetrain::getLeftVelocity()
 double Drivetrain::getRightVelocity()
 {
     return mRightEncoder.GetVelocity();
+}
+
+void Drivetrain::autobalance()
+{
+    bool autoBalance = false;
+    static const double kOffBalanceThresholdDegrees = 5.0;
+    static const double kOnBalanceThresholdDegrees  = 2.5;
+    double pitchAngleDegrees = gyro.GetPitch();
+    double pitchcorrect;
+      
+    if (autoBalance = false && (std::abs(pitchAngleDegrees) >= std::abs(kOffBalanceThresholdDegrees))) {
+        autoBalance = true;
+    }
+
+     else if (autoBalance = true && (std::abs(pitchAngleDegrees) <= std::abs(kOnBalanceThresholdDegrees))) {
+        autoBalance = false;
+    }
+  // control drive system automatically, driving in reverse direction of pitch angle, w/ magnitude based on angle
+    if (autoBalance = true) {
+        double pitchAngleRadians = pitchAngleDegrees*(numbers::pi/180);
+        pitchcorrect = sin(pitchAngleRadians)*-1;
+    }
+  drive(pitchcorrect, pitchcorrect);
+  sleep(.005); // wait 5ms to avoid hogging CPU cycles
+}
+
+void Drivetrain::turntoangle(double angle) 
+{
+    
 }
