@@ -17,6 +17,9 @@ Drivetrain drivetrain;
 frc::CustomXboxController controller{1};
 Arm arm;
 Intake intake;
+frc::Timer t;
+
+int auton;
 
 void Robot::RobotInit() 
 {
@@ -26,16 +29,71 @@ void Robot::RobotInit()
 void Robot::RobotPeriodic() 
 {
   drivetrain.updatePose();
+  
 }
 
 void Robot::AutonomousInit() 
 {
+  switch (controller.GetDPAD())
+  {
+    case (0):
+      auton = 1;
+      break;
+  
+   case (90):
+      auton = 2;
+      break;
+  
+    case (180):
+      auton = 3;
+      break;
+
+    case (270):
+      auton = 4;
+      break;
+  
+    default:
+      auton = 1;
+      break;
+  }
+  t.Restart();
 
 }
 
 void Robot::AutonomousPeriodic() 
 {
-  
+  units::second_t autoTime = t.Get();
+  switch (auton)
+  {
+  case (1):
+    if (autoTime < 3_s)
+	    arm.setPosition(1);
+    else if (autoTime < 4_s)
+  	  intake.setSpeed(-.5); 
+    else if (autoTime < 7_s)
+  	  arm.setPosition(0);
+    else if (autoTime < 8_s)
+      arm.brakeMode(true);
+    else if (autoTime < 11_s)
+      drivetrain.drive(-.5, -.5);
+    else if (autoTime < 15_s)
+      drivetrain.turnaround(180);
+    break;
+  case (3):
+    if (autoTime < 3_s)
+	    arm.setPosition(1);
+    else if (autoTime < 4_s)
+  	  intake.setSpeed(-.5); 
+    else if (autoTime < 7_s)
+  	  arm.setPosition(0);
+    else if (autoTime < 8_s)
+      arm.brakeMode(true);
+    else if (autoTime < 10_s)
+      drivetrain.drive(-.5, -.5);
+    else if (autoTime  <= 15_s)
+      drivetrain.autobalance();
+    break;
+  }
 }
 
 void Robot::TeleopInit() {
@@ -48,6 +106,10 @@ double lastPosition = 0;
 void Robot::TeleopPeriodic() 
 {
   arm.getMode() ? frc::SmartDashboard::PutString("Mode", "CUBE") : frc::SmartDashboard::PutString("Mode", "CONE");
+
+  if(controller.GetDPAD() == 180) {
+     drivetrain.autobalance();
+  }
 
   drivetrain.cheesyDrive(controller.GetLeftY(), -1*controller.GetRightX(), controller.GetRightBumper());
 
@@ -67,13 +129,13 @@ void Robot::TeleopPeriodic()
     arm.toggleMode();
 
   if (controller.GetAButtonPressed())
-    armSetPoint = 4;
+    armSetPoint = 1;
   else if (controller.GetXButtonPressed())
     armSetPoint = 2;
   else if (controller.GetYButtonPressed())
     armSetPoint = 3;
   else if (controller.GetBButtonPressed())
-    armSetPoint = 1;
+    armSetPoint = 4;
 
   lastPosition = arm.getPosition();
   //manual control overrides position control
@@ -87,6 +149,14 @@ void Robot::TeleopPeriodic()
   {
     //grab desired arm point on button press
     //this is sticky (we retain the setpoint until another input is received or manual control is initiated)
+    if (controller.GetAButtonPressed())
+      armSetPoint = 4; //stowed
+    else if (controller.GetXButtonPressed())
+      armSetPoint = 2; //mid goal
+    else if (controller.GetYButtonPressed())
+      armSetPoint = 3; //high goal
+    else if (controller.GetBButtonPressed())
+      armSetPoint = 1; //low goal
     arm.setPosition(armSetPoint);
   }
   else
