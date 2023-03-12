@@ -36,7 +36,7 @@ void Robot::AutonomousInit()
 {
   switch (controller.GetDPAD())
   {
-    case (0):
+    case (0):  
       auton = 1;
       break;
   
@@ -66,10 +66,11 @@ void Robot::AutonomousPeriodic()
   switch (auton)
   {
   case (1):
-    if (autoTime < 3_s)
-	    arm.setPosition(1);
+    if (autoTime < 3_s) {
+	    arm.setPosition(3);
+      intake.setSpeed(.3);}
     else if (autoTime < 4_s)
-  	  intake.setSpeed(-.5); 
+  	  intake.setSpeed(-.3); 
     else if (autoTime < 7_s)
   	  arm.setPosition(0);
     else if (autoTime < 8_s)
@@ -80,16 +81,16 @@ void Robot::AutonomousPeriodic()
       drivetrain.turnaround(180);
     break;
   case (3):
-    if (autoTime < 3_s)
-	    arm.setPosition(1);
-    else if (autoTime < 4_s)
-  	  intake.setSpeed(-.5); 
-    else if (autoTime < 7_s)
+    if (autoTime < 2_s)
+	    arm.setPosition(3);
+    else if (autoTime < 3_s)
+  	  intake.setSpeed(-.3); 
+    else if (autoTime < 5_s)
   	  arm.setPosition(0);
-    else if (autoTime < 8_s)
+    else if (autoTime < 6_s)
       arm.brakeMode(true);
     else if (autoTime < 10_s)
-      drivetrain.drive(-.5, -.5);
+      drivetrain.drive(.5, .5);
     else if (autoTime  <= 15_s)
       drivetrain.autobalance();
     break;
@@ -117,9 +118,9 @@ void Robot::TeleopPeriodic()
   int sign = arm.getMode() ? -1 : 1;
   //intake overrides exhaust
   if (controller.GetRightTriggerAxis() != 0)
-    intake.setSpeed(.5 * sign);
+    intake.setSpeed(.3 * sign);
   else if (controller.GetLeftTriggerAxis() != 0)
-    intake.setSpeed(-.5 * sign);
+    intake.setSpeed(-.3 * sign);
   else
     intake.setSpeed(0);
 

@@ -8,10 +8,10 @@ Drivetrain::Drivetrain()
     mRightMaster.RestoreFactoryDefaults();
     mRightSlave.RestoreFactoryDefaults();
 
-    mLeftMaster.SetSmartCurrentLimit(30);
-    mLeftSlave.SetSmartCurrentLimit(30);
-    mRightMaster.SetSmartCurrentLimit(30);
-    mRightSlave.SetSmartCurrentLimit(30);
+    mLeftMaster.SetSmartCurrentLimit(80);
+    mLeftSlave.SetSmartCurrentLimit(80);
+    mRightMaster.SetSmartCurrentLimit(80);
+    mRightSlave.SetSmartCurrentLimit(80);
 
     mLeftMaster.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     mLeftSlave.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
