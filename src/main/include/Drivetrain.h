@@ -55,7 +55,7 @@ public:
     double getRightVelocity();
 
     void autobalance();
-    void turntoangle(double angle);
+    void turnaround(double angle);
 
 
 };

@@ -112,25 +112,33 @@ void Drivetrain::autobalance()
     static const double kOffBalanceThresholdDegrees = 5.0;
     static const double kOnBalanceThresholdDegrees  = 2.5;
     double pitchAngleDegrees = gyro.GetPitch();
-    double pitchcorrect;
       
-    if (autoBalance = false && (std::abs(pitchAngleDegrees) >= std::abs(kOffBalanceThresholdDegrees))) {
+    if (autoBalance != true && (std::abs(pitchAngleDegrees) >= std::abs(kOffBalanceThresholdDegrees))) {
         autoBalance = true;
     }
 
-     else if (autoBalance = true && (std::abs(pitchAngleDegrees) <= std::abs(kOnBalanceThresholdDegrees))) {
+    else if (autoBalance != false && (std::abs(pitchAngleDegrees) <= std::abs(kOnBalanceThresholdDegrees))) {
         autoBalance = false;
     }
   // control drive system automatically, driving in reverse direction of pitch angle, w/ magnitude based on angle
     if (autoBalance = true) {
         double pitchAngleRadians = pitchAngleDegrees*(numbers::pi/180);
-        pitchcorrect = sin(pitchAngleRadians)*-1;
+        double pitchcorrect = sin(pitchAngleRadians)*-1;
+        drive(pitchcorrect, pitchcorrect);
     }
-  drive(pitchcorrect, pitchcorrect);
   sleep(.005); // wait 5ms to avoid hogging CPU cycles
 }
 
-void Drivetrain::turntoangle(double angle) 
+void Drivetrain::turnaround(double angle) 
 {
-    //motor.Set(pid.Calculate(encoder.GetDistance(), 180));
+    double yawAngleDegrees = gyro.GetYaw();
+
+    yawAngleDegrees = yawAngleDegrees <= 0 ? yawAngleDegrees + angle : yawAngleDegrees - angle;
+
+    double yawAngleRads = yawAngleDegrees*(numbers::pi*180);
+    double yawcorrect = sin(yawAngleRads)*-1;
+
+    while (gyro.GetYaw() != yawAngleDegrees) {
+        drive(yawcorrect, yawcorrect*-1);
+    }
 }
