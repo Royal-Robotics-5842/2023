@@ -3,6 +3,8 @@
 #include <numbers>
 
 #include "frc/kinematics/DifferentialDriveOdometry.h"
+#include "frc/drive/DifferentialDrive.h"
+#include "frc/motorcontrol/MotorControllerGroup.h"
 #include "frc/smartdashboard/Field2d.h"
 #include "frc/smartdashboard/SmartDashboard.h"
 #include "rev/CANSparkMax.h"
@@ -18,16 +20,16 @@ class Drivetrain
     rev::CANSparkMax mRightMaster{12, rev::CANSparkMax::MotorType::kBrushless};
     rev::CANSparkMax mRightSlave{14, rev::CANSparkMax::MotorType::kBrushless};
 
-    rev::SparkMaxRelativeEncoder mLeftEncoder = mLeftMaster.GetEncoder();
-    rev::SparkMaxRelativeEncoder mRightEncoder = mRightMaster.GetEncoder();
-
-    rev::SparkMaxPIDController mLeftController = mLeftMaster.GetPIDController();
-    rev::SparkMaxPIDController mRightController = mRightMaster.GetPIDController();
-
-    // frc::MotorControllerGroup mLeftSide{mLeftMaster, mLeftSlave};
-    // frc::MotorControllerGroup mRightSide{mRightMaster, mRightSlave};
-    // frc::DifferentialDrive drivetrain{mLeftSide, mRightSide};
+    frc::MotorControllerGroup mLeftSide{mLeftMaster, mLeftSlave};
+    frc::MotorControllerGroup mRightSide{mRightMaster, mRightSlave};
+    frc::DifferentialDrive mDrivetrain{mLeftSide, mRightSide};
     
+    rev::SparkMaxRelativeEncoder mLeftEncoder{mLeftMaster.GetEncoder()};
+    rev::SparkMaxRelativeEncoder mRightEncoder{mRightMaster.GetEncoder()};
+
+    rev::SparkMaxPIDController mLeftController{mLeftMaster.GetPIDController()};
+    rev::SparkMaxPIDController mRightController{mRightMaster.GetPIDController()};
+
     AHRS gyro{frc::SPI::Port::kMXP};
 
     //odometry
@@ -42,6 +44,7 @@ public:
     void updatePose();
 
     void drive(double left, double right);
+    void cheesyDrive(double throttle, double wheel, bool quickTurn);
     void setVelocity(double left, double right);
 
 };

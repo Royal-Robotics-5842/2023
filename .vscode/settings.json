@@ -16,6 +16,16 @@
   },
   "C_Cpp.default.configurationProvider": "vscode-wpilib",
   "files.associations": {
-    "numbers": "cpp"
+    "numbers": "cpp",
+    "array": "cpp",
+    "*.tcc": "cpp",
+    "memory": "cpp",
+    "future": "cpp",
+    "istream": "cpp",
+    "functional": "cpp",
+    "tuple": "cpp",
+    "utility": "cpp",
+    "variant": "cpp",
+    "*.inc": "cpp"
   }
 }
