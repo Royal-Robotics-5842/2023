@@ -45,28 +45,29 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit() 
 {
-  switch (controller.GetPOV())
-  {
-    case (0):  
-      auton = 1;
-      break;
+  // switch (controller.GetPOV())
+  // {
+  //   case (0):  
+  //     auton = 1;
+  //     break;
   
-   case (90):
-      auton = 2;
-      break;
+  //  case (90):
+  //     auton = 2;
+  //     break;
   
-    case (180):
-      auton = 3;
-      break;
+  //   case (180):
+  //     auton = 3;
+  //     break;
 
-    case (270):
-      auton = 4;
-      break;
+  //   case (270):
+  //     auton = 4;
+  //     break;
   
-    default:
-      auton = 1;
-      break;
-  }
+  //   default:
+  //     auton = 1;
+  //     break;
+  // }
+  drivetrain.enableBrake(false);
   t.Restart();
 }
 
@@ -77,42 +78,79 @@ void Robot::AutonomousInit()
 void Robot::AutonomousPeriodic() 
 {
   units::second_t autoTime = t.Get();
-  switch (auton)
+  if (autoTime < 2_s)
   {
-   // case (1):
-   // if ()
+    drivetrain.drive(.4,.4);
+    arm.brakeMode(true);
+  }
+  else if (autoTime < 5_s)
+    drivetrain.drive(.4,.4);
+  else
+  {
+    drivetrain.enableBrake(true);
+  }
+  // if (autoTime < 1_s)
+  // {
+  //   drivetrain.drive(.5,.5);
+  //   intake.setSpeed(.7);
+  // }
+  // else if (autoTime < 3_s)
+  // {
+  //   drivetrain.drive(0,0);
+  //   arm.setPosition(2000);
+  // }
+  // else if (autoTime < 6_s)
+  //   drivetrain.drive(-.4,-.4);
+  // else if (autoTime < 7_s)
+  // {
+  //   drivetrain.drive(0,0); 
+  //   intake.setSpeed(-.7); //positive for Cube, negative for Cone
+  // }
+  // else if (autoTime < 9_s)
+  // {
+  //   intake.setSpeed(0);
+  //   drivetrain.drive(.5,.5);
+  // }
+  // else if (autoTime < 13_s)
+  //   arm.setPosition(1000);
+  // else
+  //   arm.brakeMode(true);
+  // switch (auton)
+  // {
+  //  // case (1):
+  //  // if ()
 
     
-  case (1):
-    if (autoTime < 3_s) {
-	    arm.setPosition(3);
-      intake.setSpeed(.3);}
-    else if (autoTime < 4_s)
-  	  intake.setSpeed(-.3); 
-    else if (autoTime < 7_s)
-  	  arm.setPosition(0);
-    else if (autoTime < 8_s)
-      arm.brakeMode(true);
-    else if (autoTime < 11_s)
-      drivetrain.drive(-.5, -.5);
-    else if (autoTime < 15_s)
-      drivetrain.turnToAngle(180);
-    break;
-  case (3):
-    if (autoTime < 2_s)
-	    arm.setPosition(3);
-    else if (autoTime < 3_s)
-  	  intake.setSpeed(-.3); 
-    else if (autoTime < 5_s)
-  	  arm.setPosition(0);
-    else if (autoTime < 6_s)
-      arm.brakeMode(true);
-    else if (autoTime < 10_s)
-      drivetrain.drive(.5, .5);
-    else if (autoTime  <= 15_s)
-      drivetrain.autobalance();
-    break;
-  }
+  // case (1):
+  //   if (autoTime < 3_s) {
+	//     arm.setPosition(3);
+  //     intake.setSpeed(.3);}
+  //   else if (autoTime < 4_s)
+  // 	  intake.setSpeed(-.3); 
+  //   else if (autoTime < 7_s)
+  // 	  arm.setPosition(0);
+  //   else if (autoTime < 8_s)
+  //     arm.brakeMode(true);
+  //   else if (autoTime < 11_s)
+  //     drivetrain.drive(-.5, -.5);
+  //   else if (autoTime < 15_s)
+  //     drivetrain.turnToAngle(180);
+  //   break;
+  // case (3):
+  //   if (autoTime < 2_s)
+	//     arm.setPosition(3);
+  //   else if (autoTime < 3_s)
+  // 	  intake.setSpeed(-.3); 
+  //   else if (autoTime < 5_s)
+  // 	  arm.setPosition(0);
+  //   else if (autoTime < 6_s)
+  //     arm.brakeMode(true);
+  //   else if (autoTime < 10_s)
+  //     drivetrain.drive(.5, .5);
+  //   else if (autoTime  <= 15_s)
+  //     drivetrain.autobalance();
+  //   break;
+  // }
 }
 
 

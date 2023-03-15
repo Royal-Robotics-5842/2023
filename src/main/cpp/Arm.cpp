@@ -85,7 +85,7 @@ void Arm::setPosition(int preset)
                 position = mConeMode ? 75 : 80;
                 break;
             case 3000: //high goal
-                position = mConeMode ? 125 : 125;
+                position = mConeMode ? 135 : 135;
                 break;
             case 4000: //low goal
                 position = mConeMode ? 33 : 38;
