@@ -37,16 +37,21 @@ void Robot::AutonomousInit()
 void Robot::AutonomousPeriodic() 
 {
   units::second_t autotime = t.Get();
-  if (arm.getMode() == true)
-    arm.toggleMode();
-  if (autotime < 5_s)
+  
+  if (autotime < 1_s)
+    drivetrain.drive(-.5,-.5);
+  else if (autotime < 5_s)
     arm.setPosition(3);
+  else if (autotime < 6_s)
+    drivetrain.drive(.5,.5);
   else if (autotime < 7_s)
-    intake.setSpeed(.5);
+    intake.setSpeed(.7); //positive for Cone, negative for Cube
+  else if (autotime < 8_s)
+    drivetrain.drive(-.5,-.5);
   else if (autotime < 12_s)
     arm.setPosition(1);
   else if (autotime < 14_s)
-    drivetrain.drive(.5,.5);
+    drivetrain.drive(-.5,-.5);
   else
     arm.brakeMode(true);
 }
