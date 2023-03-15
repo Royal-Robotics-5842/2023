@@ -7,9 +7,8 @@
 #include "frc/motorcontrol/MotorControllerGroup.h"
 #include "frc/smartdashboard/Field2d.h"
 #include "frc/smartdashboard/SmartDashboard.h"
-#include "frc2/command/PIDSubsystem.h"
+#include "frc2/command/ProfiledPIDSubsystem.h"
 #include "rev/CANSparkMax.h"
-#include "frc2/command/PIDSubsystem.h"
 #include "AHRS.h"
 #include "Constants.h"
 
@@ -32,7 +31,7 @@ class Drivetrain
     rev::SparkMaxPIDController mLeftController{mLeftMaster.GetPIDController()};
     rev::SparkMaxPIDController mRightController{mRightMaster.GetPIDController()};
 
-    frc2::PIDController turnPIDController{Constants::kP, 0.0, 0.0};
+    frc::ProfiledPIDController<units::degrees> turnPIDController{Constants::kTurnP, 0.0, 0.0, frc::TrapezoidProfile<units::degrees>::Constraints{100_deg_per_s, 50_deg_per_s_sq}};
 
     AHRS gyro{frc::SPI::Port::kMXP};
 
@@ -47,6 +46,12 @@ public:
 
     void updatePose();
 
+    void resetGyro();
+    float getYaw();
+
+    void enableBrake(bool mode);
+    bool getMode();
+
     void drive(double left, double right);
     void cheesyDrive(double throttle, double wheel, bool quickTurn);
     void setVelocity(double left, double right);
@@ -55,7 +60,7 @@ public:
     double getRightVelocity();
 
     void autobalance();
-    void turnaround(double angle);
+    void turnToAngle(double angle);
 
 
 };

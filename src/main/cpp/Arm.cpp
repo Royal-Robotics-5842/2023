@@ -17,9 +17,11 @@ Arm::Arm()
     mArmController.SetFF(0);
     mArmController.SetIZone(0);
 
-    mSetPoint = -15; //stowed
+    mSetPoint = -5; //stowed
     mConeMode = false; //cube mode
 }
+
+
 
 bool Arm::getMode()
 {
@@ -39,6 +41,7 @@ double Arm::getPosition()
 void Arm::resetPosition()
 {
     mArmEncoder.SetPosition(0);
+    mArmEncoder.SetPositionConversionFactor(360/Constants::kArmGearRatio);
 }
 
 void Arm::toggleMode()
@@ -74,22 +77,22 @@ void Arm::setPosition(int preset)
 
         switch (preset)
         {
-            case 1: //stowed
-                position = -15;
+            case 1000: //stowed
+                position = -5;
                 break;
-            case 2: //mid goal
+            case 2000: //mid goal
                 //mConeMode ? heightIfCone : heightIfCube;
-                position = mConeMode ? 60 : 65;
+                position = mConeMode ? 75 : 80;
                 break;
-            case 3: //high goal
-                position = mConeMode ? 110 : 110;
+            case 3000: //high goal
+                position = mConeMode ? 125 : 125;
                 break;
-            case 4: //low goal
-                position = mConeMode ? 18 : 23;
+            case 4000: //low goal
+                position = mConeMode ? 33 : 38;
                 break;
-            /*default: //manual override, hold position
+            default: //manual override, hold position
                 position = getPosition();
-                break;*/
+                break;
         }
         
         m_goal = {(position * 1_deg), 0_deg_per_s};

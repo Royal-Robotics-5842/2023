@@ -1,4 +1,5 @@
 #include "Drivetrain.h"
+#include <iostream>
 
 Drivetrain::Drivetrain()
 {
@@ -42,6 +43,8 @@ Drivetrain::Drivetrain()
     mRightController.SetP(Constants::kP);
     mRightController.SetFF(Constants::kF);
 
+    turnPIDController.EnableContinuousInput(-180.0_deg, 180.0_deg);
+    turnPIDController.SetTolerance(1_deg, 1_deg_per_s);
 
 
     gyro.ZeroYaw();
@@ -54,6 +57,41 @@ void Drivetrain::updatePose()
     mRotation = gyro.GetRotation2d();
     mPose = mOdometry.Update(mRotation, mLeftEncoder.GetPosition()*1_m, mRightEncoder.GetPosition()*1_m);
     mField.SetRobotPose(mPose);
+}
+
+void Drivetrain::resetGyro()
+{
+    gyro.ZeroYaw();
+}
+
+bool Drivetrain::getMode()
+{
+    if (mLeftMaster.GetIdleMode() == rev::CANSparkMax::IdleMode::kBrake){
+        return true;
+    } else if (mLeftMaster.GetIdleMode() == rev::CANSparkMax::IdleMode::kCoast){
+        return false;
+    }
+}
+
+float Drivetrain::getYaw()
+{
+    return gyro.GetYaw();
+}
+
+void Drivetrain::enableBrake(bool mode)
+{
+    switch(mode){
+        case true:
+            mLeftMaster.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+            mLeftSlave.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+            mRightMaster.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+            mRightSlave.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+        case false:
+            mLeftMaster.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
+            mLeftSlave.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
+            mRightMaster.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
+            mRightSlave.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
+    }
 }
 
 void Drivetrain::drive(double left, double right)
@@ -129,16 +167,11 @@ void Drivetrain::autobalance()
   sleep(.005); // wait 5ms to avoid hogging CPU cycles
 }
 
-void Drivetrain::turnaround(double angle) 
+void Drivetrain::turnToAngle(double angle) 
 {
-    double yawAngleDegrees = gyro.GetYaw();
-
-    yawAngleDegrees = yawAngleDegrees <= 0 ? yawAngleDegrees + angle : yawAngleDegrees - angle;
-
-    double yawAngleRads = yawAngleDegrees*(numbers::pi*180);
-    double yawcorrect = sin(yawAngleRads)*-1;
-
-    while (gyro.GetYaw() != yawAngleDegrees) {
-        drive(yawcorrect, yawcorrect*-1);
-    }
+    turnPIDController.SetGoal({angle*1_deg, 0_deg_per_s});
+    double turnToAnglePower = turnPIDController.Calculate(gyro.GetYaw()*1_deg);
+    std::cout << turnToAnglePower << endl;
+    mLeftController.SetReference(-turnToAnglePower, rev::CANSparkMax::ControlType::kDutyCycle);
+    mRightController.SetReference(turnToAnglePower, rev::CANSparkMax::ControlType::kDutyCycle);
 }
