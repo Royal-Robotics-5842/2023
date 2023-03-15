@@ -21,7 +21,9 @@ frc::Timer t;
 
 void Robot::RobotInit() 
 {
-
+  m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
+  m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
+  frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 }
 
 void Robot::RobotPeriodic() 
@@ -31,6 +33,7 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit() 
 {
+  m_autoSelected = m_chooser.GetSelected();
   t.Restart();
 }
 
@@ -38,22 +41,46 @@ void Robot::AutonomousPeriodic()
 {
   units::second_t autotime = t.Get();
   
-  if (autotime < 1_s)
-    drivetrain.drive(-.5,-.5);
-  else if (autotime < 5_s)
-    arm.setPosition(3);
-  else if (autotime < 6_s)
-    drivetrain.drive(.5,.5);
-  else if (autotime < 7_s)
-    intake.setSpeed(.7); //positive for Cone, negative for Cube
-  else if (autotime < 8_s)
-    drivetrain.drive(-.5,-.5);
-  else if (autotime < 12_s)
-    arm.setPosition(1);
-  else if (autotime < 14_s)
-    drivetrain.drive(-.5,-.5);
-  else
-    arm.brakeMode(true);
+  units::second_t autoTime = t.Get();
+  if (m_autoSelected == kAutoNameCustom) {
+    if (autoTime < 5_s)
+    {
+      drivetrain.drive(.4,.4);
+      arm.brakeMode(true);
+    }
+    else
+      drivetrain.enableBrake(true);
+  } 
+  else {
+    if (autoTime < 1_s)
+    {
+      drivetrain.drive(.5,.5);
+      intake.setSpeed(.7);
+    }
+    else if (autoTime < 3_s)
+    {
+      drivetrain.drive(0,0);
+      arm.setPosition(2000);
+    }
+    else if (autoTime < 6_s)
+      drivetrain.drive(-.4,-.4);
+    else if (autoTime < 7_s)
+    {
+      drivetrain.drive(0,0); 
+      intake.setSpeed(-.7); //positive for Cube, negative for Cone
+    }
+    else if (autoTime < 9_s)
+    {
+      intake.setSpeed(0);
+      drivetrain.drive(.5,.5);
+    }
+    else if (autoTime < 13_s)
+      arm.setPosition(1000);
+    else
+      arm.brakeMode(true);
+  }
+  
+  
 }
 
 void Robot::TeleopInit() {

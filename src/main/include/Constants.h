@@ -44,16 +44,18 @@ class Constants
 {
 
 public:
-    static constexpr double kP = 0.027251;
-    static constexpr double kF = 0.1971;
+    static constexpr double kP = 0.00025637;
+    static constexpr double kF = 0.2380952380952381;
 
     static constexpr double kWheelDiameter = 0.1524;
+
+    static constexpr double kTurnP = 0.004;
 
     static constexpr auto kArmS = 0.12855 * 1_V;
     static constexpr auto kArmG = 0.14945 * 1_V;
     static constexpr auto kArmV = 0.050359 * 1_V / 1_rad_per_s;
 
-    static constexpr auto kArmGearRatio = 150;
-    static constexpr auto kLowGearRatio = 8.45;
+    static constexpr auto kArmGearRatio = 75;
+    static constexpr auto kLowGearRatio = 10.75;
 
 };
