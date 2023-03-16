@@ -46,6 +46,8 @@ Drivetrain::Drivetrain()
     turnPIDController.EnableContinuousInput(-180.0_deg, 180.0_deg);
     turnPIDController.SetTolerance(1_deg, 1_deg_per_s);
 
+    autobalancePIDController.EnableContinuousInput(-180, -180);
+    autobalancePIDController.SetTolerance(1, 1);
 
     gyro.ZeroYaw();
     mField.SetRobotPose(mPose);
@@ -167,6 +169,12 @@ void Drivetrain::autobalance()
   sleep(.005); // wait 5ms to avoid hogging CPU cycles
 }
 
+void Drivetrain::autobalance2()
+{
+    double output = autobalancePIDController.Calculate(0); 
+    mLeftMaster.SetVoltage(output*1_V);
+    mRightMaster.SetVoltage(output*1_V);
+}
 void Drivetrain::turnToAngle(double angle) 
 {
     turnPIDController.SetGoal({angle*1_deg, 0_deg_per_s});

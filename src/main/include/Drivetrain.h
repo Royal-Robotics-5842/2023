@@ -32,6 +32,7 @@ class Drivetrain
     rev::SparkMaxPIDController mRightController{mRightMaster.GetPIDController()};
 
     frc::ProfiledPIDController<units::degrees> turnPIDController{Constants::kTurnP, 0.0, 0.0, frc::TrapezoidProfile<units::degrees>::Constraints{100_deg_per_s, 50_deg_per_s_sq}};
+    frc2::PIDController autobalancePIDController{Constants::kAutoP, 0.0, 0.0,};
 
     AHRS gyro{frc::SPI::Port::kMXP};
 
@@ -60,6 +61,7 @@ public:
     double getRightVelocity();
 
     void autobalance();
+    void autobalance2();
     void turnToAngle(double angle);
 
 
