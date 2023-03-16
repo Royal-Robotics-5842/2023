@@ -34,9 +34,6 @@ void Robot::RobotInit()
 void Robot::RobotPeriodic() 
 {
   drivetrain.updatePose();
-
-  std::cout << "Arm position: " << arm.getPosition() << endl;
-  std::cout << "Gyro Yaw: " << drivetrain.getYaw() << endl;
 }
 
 
@@ -45,112 +42,80 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit() 
 {
-  // switch (controller.GetPOV())
-  // {
-  //   case (0):  
-  //     auton = 1;
-  //     break;
-  
-  //  case (90):
-  //     auton = 2;
-  //     break;
-  
-  //   case (180):
-  //     auton = 3;
-  //     break;
-
-  //   case (270):
-  //     auton = 4;
-  //     break;
-  
-  //   default:
-  //     auton = 1;
-  //     break;
-  // }
-  drivetrain.enableBrake(false);
-  t.Restart();
+  m_autoSelected = m_chooser.GetSelected();
+  fmt::print("Auto selected: {}\n", m_autoSelected);
+  int i = 1;
+  while(i == 1)
+  {
+    if (m_autoSelected == "1")
+    {
+        auton = 1;
+        break;
+    }
+    else if (m_autoSelected == "2") 
+    {
+        auton = 2;
+        break;
+    } 
+    else if (m_autoSelected == "3") 
+    {
+        auton = 3;
+        break;
+    } 
+    else if (m_autoSelected == "4") 
+    {
+        auton = 4;
+        break;
+    }
+    else
+    {
+        auton = 1;
+        break;
+    }
+    t.Restart();
+    t.Start();
+    i++;
+    std::cout << auton << endl;
+  }
 }
-
-
-
-
 
 void Robot::AutonomousPeriodic() 
 {
   units::second_t autoTime = t.Get();
-  if (autoTime < 2_s)
-  {
-    drivetrain.drive(.4,.4);
-    arm.brakeMode(true);
+  int timer = (autoTime/1_s);
+  std::cout<<timer<<endl;
+  switch (auton)
+  {   
+  case (1):
+    if (autoTime < 3_s) {
+	    arm.setPosition(3000);
+      intake.setSpeed(0.3);}
+    else if (autoTime < 4_s)
+  	  intake.setSpeed(-0.3); 
+    else if (autoTime < 7_s)
+  	  arm.setPosition(1000);
+    else if (autoTime < 8_s)
+      arm.brakeMode(true);
+    else if (autoTime < 11_s)
+      drivetrain.drive(-.5, -.5);
+    else if (autoTime < 15_s)
+      drivetrain.turnToAngle(180);
+    break;
+  case (2):
+    if (autoTime < 2_s)
+	    arm.setPosition(3);
+    else if (autoTime < 3_s)
+  	  intake.setSpeed(-.3); 
+    else if (autoTime < 5_s)
+  	  arm.setPosition(1000);
+    else if (autoTime < 6_s)
+      arm.brakeMode(true);
+    else if (autoTime < 10_s)
+      drivetrain.drive(.5, .5);
+    else if (autoTime  <= 15_s)
+      drivetrain.autobalance2();
+    break;
   }
-  else if (autoTime < 5_s)
-    drivetrain.drive(.4,.4);
-  else
-  {
-    drivetrain.enableBrake(true);
-  }
-  // if (autoTime < 1_s)
-  // {
-  //   drivetrain.drive(.5,.5);
-  //   intake.setSpeed(.7);
-  // }
-  // else if (autoTime < 3_s)
-  // {
-  //   drivetrain.drive(0,0);
-  //   arm.setPosition(2000);
-  // }
-  // else if (autoTime < 6_s)
-  //   drivetrain.drive(-.4,-.4);
-  // else if (autoTime < 7_s)
-  // {
-  //   drivetrain.drive(0,0); 
-  //   intake.setSpeed(-.7); //positive for Cube, negative for Cone
-  // }
-  // else if (autoTime < 9_s)
-  // {
-  //   intake.setSpeed(0);
-  //   drivetrain.drive(.5,.5);
-  // }
-  // else if (autoTime < 13_s)
-  //   arm.setPosition(1000);
-  // else
-  //   arm.brakeMode(true);
-  // switch (auton)
-  // {
-  //  // case (1):
-  //  // if ()
-
-    
-  // case (1):
-  //   if (autoTime < 3_s) {
-	//     arm.setPosition(3);
-  //     intake.setSpeed(.3);}
-  //   else if (autoTime < 4_s)
-  // 	  intake.setSpeed(-.3); 
-  //   else if (autoTime < 7_s)
-  // 	  arm.setPosition(0);
-  //   else if (autoTime < 8_s)
-  //     arm.brakeMode(true);
-  //   else if (autoTime < 11_s)
-  //     drivetrain.drive(-.5, -.5);
-  //   else if (autoTime < 15_s)
-  //     drivetrain.turnToAngle(180);
-  //   break;
-  // case (3):
-  //   if (autoTime < 2_s)
-	//     arm.setPosition(3);
-  //   else if (autoTime < 3_s)
-  // 	  intake.setSpeed(-.3); 
-  //   else if (autoTime < 5_s)
-  // 	  arm.setPosition(0);
-  //   else if (autoTime < 6_s)
-  //     arm.brakeMode(true);
-  //   else if (autoTime < 10_s)
-  //     drivetrain.drive(.5, .5);
-  //   else if (autoTime  <= 15_s)
-  //     drivetrain.autobalance();
-  //   break;
-  // }
 }
 
 
@@ -176,7 +141,7 @@ void Robot::TeleopPeriodic()
   drivetrain.getMode() ? frc::SmartDashboard::PutString("Drivetrain Mode", "BRAKE") : frc::SmartDashboard::PutString("Drivetrain Mode", "COAST");
 
   if(controller.GetPOV() == 180) {
-     drivetrain.autobalance();
+     drivetrain.autobalance2();
   }
 
   if(controller.GetRightStickButtonPressed()){
@@ -192,10 +157,10 @@ void Robot::TeleopPeriodic()
   //if we're in cone mode, intake exhausts a cube, so we need to invert intake controls when in cube mode so intake intakes always
   int sign = arm.getMode() ? -1 : 1;
   //intake overrides exhaust
-  if (controller.GetRightTriggerAxis() > 0.1)
-    intake.setSpeed(.3 * sign);
-  else if (controller.GetLeftTriggerAxis() > 0.1)
-    intake.setSpeed(-.3 * sign);
+  if (controller.GetRightTriggerAxis() != 0)
+    intake.setSpeed(.7 * sign);
+  else if (controller.GetLeftTriggerAxis() != 0)
+    intake.setSpeed(-.7 * sign);
   else
     intake.setSpeed(0);
 
