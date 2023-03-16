@@ -28,9 +28,6 @@ void Robot::RobotInit()
 }
 
 
-
-
-
 void Robot::RobotPeriodic() 
 {
   drivetrain.updatePose();
@@ -45,6 +42,7 @@ void Robot::AutonomousInit()
   m_autoSelected = m_chooser.GetSelected();
   fmt::print("Auto selected: {}\n", m_autoSelected);
   int i = 1;
+  t.Restart();
   while(i == 1)
   {
     if (m_autoSelected == "1")
@@ -72,8 +70,7 @@ void Robot::AutonomousInit()
         auton = 1;
         break;
     }
-    t.Restart();
-    t.Start();
+    // t.Start();
     i++;
     std::cout << auton << endl;
   }
@@ -87,33 +84,50 @@ void Robot::AutonomousPeriodic()
   switch (auton)
   {   
   case (1):
-    if (autoTime < 3_s) {
+    if (autoTime < 4_s) {
 	    arm.setPosition(3000);
-      intake.setSpeed(0.3);}
-    else if (autoTime < 4_s)
-  	  intake.setSpeed(-0.3); 
-    else if (autoTime < 7_s)
-  	  arm.setPosition(1000);
+      //intake.setSpeed(0.3);
+      }
+    else if (autoTime < 6_s)
+    {
+      drivetrain.drive(-0.5, -0.5);
+  	  //intake.setSpeed(-0.7); 
+    }
     else if (autoTime < 8_s)
+    {
+      intake.setSpeed(-0.7);
+  	  //arm.setPosition(1000);
+    }
+    else if (autoTime < 8.1_s)
       arm.brakeMode(true);
     else if (autoTime < 11_s)
-      drivetrain.drive(-.5, -.5);
-    else if (autoTime < 15_s)
-      drivetrain.turnToAngle(180);
-    break;
-  case (2):
-    if (autoTime < 2_s)
-	    arm.setPosition(3);
-    else if (autoTime < 3_s)
-  	  intake.setSpeed(-.3); 
-    else if (autoTime < 5_s)
-  	  arm.setPosition(1000);
-    else if (autoTime < 6_s)
-      arm.brakeMode(true);
-    else if (autoTime < 10_s)
       drivetrain.drive(.5, .5);
-    else if (autoTime  <= 15_s)
-      drivetrain.autobalance2();
+    else if (autoTime < 15_s)
+      //drivetrain.autobalance2();
+      drivetrain.drive(0, 0);
+    break;
+  case (2): //High Goal and balance
+    if (autoTime < 4_s) {
+	    arm.setPosition(3000);
+      //intake.setSpeed(0.3);
+      }
+    else if (autoTime < 6_s)
+    {
+      drivetrain.drive(-0.5, -0.5);
+  	  //intake.setSpeed(-0.7); 
+    }
+    else if (autoTime < 8_s)
+    {
+      intake.setSpeed(-0.7);
+  	  //arm.setPosition(1000);
+    }
+    else if (autoTime < 8.1_s)
+      arm.brakeMode(true);
+    else if (autoTime < 11_s)
+      drivetrain.drive(.5, .5);
+    else if (autoTime < 15_s)
+      //drivetrain.autobalance2();
+      drivetrain.drive(0, 0);
     break;
   }
 }
@@ -252,6 +266,7 @@ void Robot::TestPeriodic() {
   //Reset position once it's properly 0'd out
   if (controller.GetAButtonPressed())
     arm.resetPosition();
+  std::cout << arm.getPosition() << endl;
 }
 
 
