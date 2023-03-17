@@ -50,6 +50,16 @@ void Arm::toggleMode()
     mConeMode ^= true;
 }
 
+void Arm::toggleConeMode()
+{
+    mConeMode = true;
+}
+
+void Arm::toggleCubeMode()
+{
+    mConeMode = false;
+}
+
 void Arm::brakeMode(bool input)
 {
     if (input)

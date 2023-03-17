@@ -23,19 +23,17 @@ int auton;
 
 void Robot::RobotInit() 
 {
-    arm.resetPosition();
+  m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
+  //m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
+  frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
+  arm.resetPosition();
 
 }
-
 
 void Robot::RobotPeriodic() 
 {
   drivetrain.updatePose();
 }
-
-
-
-
 
 void Robot::AutonomousInit() 
 {
@@ -47,7 +45,7 @@ void Robot::AutonomousInit()
   {
     if (m_autoSelected == "1")
     {
-        auton = 1;
+        auton = 3;
         break;
     }
     else if (m_autoSelected == "2") 
@@ -79,84 +77,78 @@ void Robot::AutonomousInit()
 void Robot::AutonomousPeriodic() 
 {
   units::second_t autoTime = t.Get();
-  int timer = (autoTime/1_s);
-  std::cout<<timer<<endl;
   switch (auton)
   {   
-  case (1):
-    if (autoTime < 4_s) {
+  case (1): //High Goal and move -- CONE
+    if (autoTime < 4_s) 
 	    arm.setPosition(3000);
-      //intake.setSpeed(0.3);
-      }
     else if (autoTime < 6_s)
-    {
       drivetrain.drive(-0.5, -0.5);
-  	  //intake.setSpeed(-0.7); 
-    }
     else if (autoTime < 8_s)
-    {
       intake.setSpeed(-0.7);
-  	  //arm.setPosition(1000);
-    }
-    else if (autoTime < 8.1_s)
-      arm.brakeMode(true);
     else if (autoTime < 11_s)
       drivetrain.drive(.5, .5);
     else if (autoTime < 15_s)
-      //drivetrain.autobalance2();
       drivetrain.drive(0, 0);
     break;
-  case (2): //High Goal and balance
-    if (autoTime < 4_s) {
+
+  case (2): //High Goal and balance -- CONE
+    if (autoTime < 4_s)
 	    arm.setPosition(3000);
-      //intake.setSpeed(0.3);
-      }
     else if (autoTime < 6_s)
-    {
       drivetrain.drive(-0.5, -0.5);
-  	  //intake.setSpeed(-0.7); 
-    }
     else if (autoTime < 8_s)
-    {
       intake.setSpeed(-0.7);
-  	  //arm.setPosition(1000);
-    }
-    else if (autoTime < 8.1_s)
-      arm.brakeMode(true);
     else if (autoTime < 11_s)
       drivetrain.drive(.5, .5);
     else if (autoTime < 15_s)
-      //drivetrain.autobalance2();
+      drivetrain.autobalance2();
+    break;
+
+    case (3): //High Goal and move -- CUBE
+    if (autoTime < 4_s) 
+	    arm.setPosition(3000);
+    else if (autoTime < 6_s)
+      drivetrain.drive(-0.5, -0.5);
+    else if (autoTime < 8_s)
+      intake.setSpeed(0.7);
+    else if (autoTime < 11_s)
+      drivetrain.drive(.5, .5);
+    else if (autoTime < 15_s)
       drivetrain.drive(0, 0);
+    break;
+
+    case (4): //High Goal and balance -- CUBE
+    if (autoTime < 4_s) 
+	    arm.setPosition(3000);
+    else if (autoTime < 6_s)
+      drivetrain.drive(-0.5, -0.5);
+    else if (autoTime < 8_s)
+      intake.setSpeed(0.7);
+    else if (autoTime < 11_s)
+      drivetrain.drive(.5, .5);
+    else if (autoTime < 15_s)
+      drivetrain.autobalance2();
     break;
   }
 }
-
-
-
-
 
 void Robot::TeleopInit() {
   arm.brakeMode(true);
   drivetrain.enableBrake(false);
 }
 
-
-
-
-
 int armSetPoint = 0;
 double lastPosition = 0;
 
 void Robot::TeleopPeriodic() 
 {
-
   arm.getMode() ? frc::SmartDashboard::PutString("Mode", "CUBE") : frc::SmartDashboard::PutString("Mode", "CONE");
   drivetrain.getMode() ? frc::SmartDashboard::PutString("Drivetrain Mode", "BRAKE") : frc::SmartDashboard::PutString("Drivetrain Mode", "COAST");
 
-  if(controller.GetPOV() == 180) {
-     drivetrain.autobalance2();
-  }
+  //if(controller.GetPOV() == 180) {
+    // drivetrain.autobalance2();
+  //}
 
   if(controller.GetRightStickButtonPressed()){
     if(drivetrain.getMode()){
@@ -180,9 +172,10 @@ void Robot::TeleopPeriodic()
 
   //toggle between cone preset heights and cube preset heights -- default is cube
   //if limelight, also toggle vision mode when aiming between tape and tags
-  if (controller.GetLeftBumperPressed())
-    arm.toggleMode();
-
+  if (controller.GetPOV(90))
+    arm.toggleConeMode();
+  if (controller.GetPOV(270))
+    arm.toggleCubeMode();
   if (controller.GetAButtonPressed())
     armSetPoint = 1000;
   else if (controller.GetXButtonPressed())

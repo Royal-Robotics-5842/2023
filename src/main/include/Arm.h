@@ -39,13 +39,15 @@ class Arm
     void resetPosition();
 
     void toggleMode();
+    void toggleConeMode();
+    void toggleCubeMode();
     void setSpeed(double speed);
     void setPosition(int preset);
 
     void brakeMode(bool input);
 
     static constexpr units::second_t kDt = 20_ms;
-    frc::TrapezoidProfile<units::degrees>::Constraints m_constraints{100_deg_per_s, 120_deg_per_s_sq};
+    frc::TrapezoidProfile<units::degrees>::Constraints m_constraints{160_deg_per_s, 180_deg_per_s_sq};
     frc::TrapezoidProfile<units::degrees>::State m_goal;
     frc::TrapezoidProfile<units::degrees>::State m_setpoint;
 };
