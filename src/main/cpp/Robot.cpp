@@ -43,22 +43,22 @@ void Robot::AutonomousInit()
   t.Restart();
   while(i == 1)
   {
-    if (m_autoSelected == "1")
+    if (controller.GetYButtonPressed())
     {
-        auton = 3;
+        auton = 1;
         break;
     }
-    else if (m_autoSelected == "2") 
+    else if (controller.GetBButtonPressed()) 
     {
         auton = 2;
         break;
     } 
-    else if (m_autoSelected == "3") 
+    else if (controller.GetAButtonPressed()) 
     {
         auton = 3;
         break;
     } 
-    else if (m_autoSelected == "4") 
+    else if (controller.GetXButtonPressed()) 
     {
         auton = 4;
         break;
@@ -79,56 +79,56 @@ void Robot::AutonomousPeriodic()
   units::second_t autoTime = t.Get();
   switch (auton)
   {   
-  case (1): //High Goal and move -- CONE
+  case (1): //High Goal and Balance -- CONE
     if (autoTime < 4_s) 
 	    arm.setPosition(3000);
     else if (autoTime < 6_s)
-      drivetrain.drive(-0.5, -0.5);
-    else if (autoTime < 8_s)
       intake.setSpeed(-0.7);
-    else if (autoTime < 11_s)
+    else if (autoTime < 7_s)
+      intake.setSpeed(-0.7);
+    else if (autoTime < 10_s)
       drivetrain.drive(.5, .5);
     else if (autoTime < 15_s)
-      drivetrain.drive(0, 0);
+      drivetrain.autobalance2();
     break;
 
-  case (2): //High Goal and balance -- CONE
-    if (autoTime < 4_s)
+  case (2): //High Goal and Move -- CONE
+    if (autoTime < 4_s) 
 	    arm.setPosition(3000);
     else if (autoTime < 6_s)
-      drivetrain.drive(-0.5, -0.5);
-    else if (autoTime < 8_s)
       intake.setSpeed(-0.7);
+    else if (autoTime < 8_s)
+      arm.setPosition(1000);
+    else if (autoTime < 11_s)
+      drivetrain.drive(.7, .7);
+    else if (autoTime < 15_s)
+      drivetrain.enableBrake(true);
+    break;
+
+  case (3): //High Goal and Balance -- CUBE
+    if (autoTime < 4_s) 
+	    arm.setPosition(3000);
+    else if (autoTime < 6_s)
+      intake.setSpeed(0.7);
+    else if (autoTime < 8_s)
+      arm.setPosition(1000);
     else if (autoTime < 11_s)
       drivetrain.drive(.5, .5);
     else if (autoTime < 15_s)
       drivetrain.autobalance2();
     break;
 
-    case (3): //High Goal and move -- CUBE
+    case (4): //High Goal and Move -- CUBE
     if (autoTime < 4_s) 
 	    arm.setPosition(3000);
     else if (autoTime < 6_s)
-      drivetrain.drive(-0.5, -0.5);
-    else if (autoTime < 8_s)
       intake.setSpeed(0.7);
-    else if (autoTime < 11_s)
-      drivetrain.drive(.5, .5);
-    else if (autoTime < 15_s)
-      drivetrain.drive(0, 0);
-    break;
-
-    case (4): //High Goal and balance -- CUBE
-    if (autoTime < 4_s) 
-	    arm.setPosition(3000);
-    else if (autoTime < 6_s)
-      drivetrain.drive(-0.5, -0.5);
     else if (autoTime < 8_s)
-      intake.setSpeed(0.7);
+      arm.setPosition(1000);
     else if (autoTime < 11_s)
-      drivetrain.drive(.5, .5);
+      drivetrain.drive(.7, .7);
     else if (autoTime < 15_s)
-      drivetrain.autobalance2();
+      drivetrain.enableBrake(true);
     break;
   }
 }
@@ -172,9 +172,9 @@ void Robot::TeleopPeriodic()
 
   //toggle between cone preset heights and cube preset heights -- default is cube
   //if limelight, also toggle vision mode when aiming between tape and tags
-  if (controller.GetPOV(90))
+  if (controller.GetPOV() == 90)
     arm.toggleConeMode();
-  if (controller.GetPOV(270))
+  if (controller.GetPOV() == 270)
     arm.toggleCubeMode();
   if (controller.GetAButtonPressed())
     armSetPoint = 1000;

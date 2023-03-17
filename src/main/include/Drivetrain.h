@@ -33,6 +33,7 @@ class Drivetrain
 
     frc::ProfiledPIDController<units::degrees> turnPIDController{Constants::kTurnP, 0.0, 0.0, frc::TrapezoidProfile<units::degrees>::Constraints{100_deg_per_s, 50_deg_per_s_sq}};
     frc2::PIDController autobalancePIDController{Constants::kAutoP, 0.0, 0.0,};
+    //frc::ProfiledPIDController<units::degrees>  autobalancePIDController{Constants::kAutoP, 0.0, 0.0, frc::TrapezoidProfile<units::degrees>::Constraints{3_deg_per_s, 5_deg_per_s_sq}};
 
     AHRS gyro{frc::SPI::Port::kMXP};
 
