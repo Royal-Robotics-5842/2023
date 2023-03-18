@@ -80,6 +80,7 @@ void Robot::AutonomousPeriodic()
   switch (auton)
   {   
   case (1): //High Goal and Balance -- CONE
+    /*
     if (autoTime < 2.8_s)
       arm.setPosition(3000);
     else if (autoTime < 4_s)
@@ -92,20 +93,22 @@ void Robot::AutonomousPeriodic()
       drivetrain.drive(-0.5, -0.5);
     else if (autoTime < 15_s)
       drivetrain.autobalance2();
-    
-    /*
+    */
+
     if (autoTime < 4_s) 
 	    arm.setPosition(3000);
     else if (autoTime < 6_s)
       intake.setSpeed(-0.7);
-    else if (autoTime < 7_s)
-      intake.setSpeed(-0.7);
-    else if (autoTime < 10_s)
+    //else if (autoTime < 8_s)
+    //  intake.setSpeed(-0.7);
+    else if (autoTime < 9_s){
       drivetrain.drive(.5, .5);
+      intake.setSpeed(0);
+    }\
     else if (autoTime < 15_s)
       drivetrain.autobalance2();
     break;
-    */
+    
   case (2): //High Goal and Move -- CONE
     if (autoTime < 4_s) 
 	    arm.setPosition(3000);
@@ -159,10 +162,6 @@ void Robot::TeleopPeriodic()
 {
   arm.getMode() ? frc::SmartDashboard::PutString("Mode", "CUBE") : frc::SmartDashboard::PutString("Mode", "CONE");
   drivetrain.getMode() ? frc::SmartDashboard::PutString("Drivetrain Mode", "BRAKE") : frc::SmartDashboard::PutString("Drivetrain Mode", "COAST");
-
-  //if(controller.GetPOV() == 180) {
-    // drivetrain.autobalance2();
-  //}
 
   if(controller.GetRightStickButtonPressed()){
     if(drivetrain.getMode()){

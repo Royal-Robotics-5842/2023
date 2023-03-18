@@ -106,10 +106,10 @@ void Drivetrain::drive(double left, double right)
 
 void Drivetrain::driveDistance(units::meter_t dDistance)
 {
-    drivingPIDController.SetGoal({dDistance, 0_mps});
-    auto output = drivingPIDController.Calculate(units::meter_t(mLeftEncoder.GetPosition()));
-    mLeftSide.SetVoltage(output*1_V);
-    mRightSide.SetVoltage(output*1_V);
+    //drivingPIDController.SetGoal({dDistance, 0_mps});
+    auto output = drivingPIDController.Calculate(units::meter_t(mLeftEncoder.GetPosition()), dDistance);
+    mLeftSide.SetVoltage(output*0.5_V);
+    mRightSide.SetVoltage(output*0.5_V);
 }
 
 void Drivetrain::cheesyDrive(double throttle, double wheel, bool isQuickTurn)
