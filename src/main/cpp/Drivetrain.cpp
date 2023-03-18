@@ -48,6 +48,7 @@ Drivetrain::Drivetrain()
 
     autobalancePIDController.EnableContinuousInput(-180, 180);
     autobalancePIDController.SetTolerance(1, 1);
+
     //autobalancePIDController.EnableContinuousInput(-180_deg, 180_deg);
     //autobalancePIDController.SetTolerance(1_deg, 1_deg_per_s);
 
@@ -103,6 +104,14 @@ void Drivetrain::drive(double left, double right)
    mDrivetrain.TankDrive(left, right);
 }
 
+void Drivetrain::driveDistance(units::meter_t dDistance)
+{
+    drivingPIDController.SetGoal({dDistance, 0_mps});
+    auto output = drivingPIDController.Calculate(units::meter_t(mLeftEncoder.GetPosition()));
+    mLeftSide.SetVoltage(output*1_V);
+    mRightSide.SetVoltage(output*1_V);
+}
+
 void Drivetrain::cheesyDrive(double throttle, double wheel, bool isQuickTurn)
 {
     
@@ -146,29 +155,6 @@ double Drivetrain::getLeftVelocity()
 double Drivetrain::getRightVelocity()
 {
     return mRightEncoder.GetVelocity();
-}
-
-void Drivetrain::autobalance()
-{
-    bool autoBalance = false;
-    static const double kOffBalanceThresholdDegrees = 5.0;
-    static const double kOnBalanceThresholdDegrees  = 2.5;
-    double pitchAngleDegrees = gyro.GetPitch();
-      
-    if (autoBalance != true && (std::abs(pitchAngleDegrees) >= std::abs(kOffBalanceThresholdDegrees))) {
-        autoBalance = true;
-    }
-
-    else if (autoBalance != false && (std::abs(pitchAngleDegrees) <= std::abs(kOnBalanceThresholdDegrees))) {
-        autoBalance = false;
-    }
-  // control drive system automatically, driving in reverse direction of pitch angle, w/ magnitude based on angle
-    if (autoBalance = true) {
-        double pitchAngleRadians = pitchAngleDegrees*(numbers::pi/180);
-        double pitchcorrect = sin(pitchAngleRadians)*-1;
-        drive(pitchcorrect, pitchcorrect);
-    }
-  sleep(.005); // wait 5ms to avoid hogging CPU cycles
 }
 
 void Drivetrain::autobalance2()

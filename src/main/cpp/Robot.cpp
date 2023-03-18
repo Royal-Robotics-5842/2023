@@ -80,6 +80,20 @@ void Robot::AutonomousPeriodic()
   switch (auton)
   {   
   case (1): //High Goal and Balance -- CONE
+    if (autoTime < 2.8_s)
+      arm.setPosition(3000);
+    else if (autoTime < 4_s)
+      intake.setSpeed(-0.8);
+    else if (autoTime < 9_s)
+      drivetrain.driveDistance(136.69_in);
+    else if (autoTime < 9.5_s)
+      drivetrain.enableBrake(true);
+    else if (autoTime < 11_s)
+      drivetrain.drive(-0.5, -0.5);
+    else if (autoTime < 15_s)
+      drivetrain.autobalance2();
+    
+    /*
     if (autoTime < 4_s) 
 	    arm.setPosition(3000);
     else if (autoTime < 6_s)
@@ -91,7 +105,7 @@ void Robot::AutonomousPeriodic()
     else if (autoTime < 15_s)
       drivetrain.autobalance2();
     break;
-
+    */
   case (2): //High Goal and Move -- CONE
     if (autoTime < 4_s) 
 	    arm.setPosition(3000);

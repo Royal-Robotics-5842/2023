@@ -33,7 +33,7 @@ class Drivetrain
 
     frc::ProfiledPIDController<units::degrees> turnPIDController{Constants::kTurnP, 0.0, 0.0, frc::TrapezoidProfile<units::degrees>::Constraints{100_deg_per_s, 50_deg_per_s_sq}};
     frc2::PIDController autobalancePIDController{Constants::kAutoP, 0.0, 0.0,};
-    //frc::ProfiledPIDController<units::degrees>  autobalancePIDController{Constants::kAutoP, 0.0, 0.0, frc::TrapezoidProfile<units::degrees>::Constraints{3_deg_per_s, 5_deg_per_s_sq}};
+    frc::ProfiledPIDController<units::meters> drivingPIDController{32.483, 0.0, 3.22844, frc::TrapezoidProfile<units::meters>::Constraints{4.2_mps, 2.2_mps_sq}};
 
     AHRS gyro{frc::SPI::Port::kMXP};
 
@@ -55,6 +55,7 @@ public:
     bool getMode();
 
     void drive(double left, double right);
+    void driveDistance(units::meter_t dDistance);
     void cheesyDrive(double throttle, double wheel, bool quickTurn);
     void setVelocity(double left, double right);
 
