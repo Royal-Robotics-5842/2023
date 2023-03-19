@@ -104,7 +104,7 @@ void Robot::AutonomousPeriodic()
     else if (autoTime < 9_s){
       drivetrain.drive(.5, .5);
       intake.setSpeed(0);
-    }\
+    }
     else if (autoTime < 15_s)
       drivetrain.autobalance();
     break;
