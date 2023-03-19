@@ -63,7 +63,6 @@ public:
     double getRightVelocity();
 
     void autobalance();
-    void autobalance2();
     void turnToAngle(double angle);
 
 

@@ -159,7 +159,7 @@ double Drivetrain::getRightVelocity()
     return mRightEncoder.GetVelocity();
 }
 
-void Drivetrain::autobalance2()
+void Drivetrain::autobalance()
 {
     //autobalancePIDController.SetGoal({0_deg, 0_deg_per_s});
     //double output = autobalancePIDController.Calculate(gyro.GetPitch()*1_deg);
