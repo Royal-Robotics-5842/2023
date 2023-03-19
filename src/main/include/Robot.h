@@ -25,8 +25,10 @@ class Robot : public frc::TimedRobot {
   void SimulationPeriodic() override;
 
  private:
+  //auto selector
   frc::SendableChooser<std::string> m_chooser;
   const std::string kAutoNameDefault = "Default";
   const std::string kAutoNameCustom = "My Auto";
   std::string m_autoSelected;
+
 };

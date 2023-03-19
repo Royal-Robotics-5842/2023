@@ -100,6 +100,7 @@
     "stop_token": "cpp",
     "thread": "cpp",
     "cinttypes": "cpp",
-    "typeindex": "cpp"
+    "typeindex": "cpp",
+    "*.inc": "cpp"
   }
 }
