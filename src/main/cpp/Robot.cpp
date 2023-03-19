@@ -106,7 +106,7 @@ void Robot::AutonomousPeriodic()
       intake.setSpeed(0);
     }\
     else if (autoTime < 15_s)
-      drivetrain.autobalance2();
+      drivetrain.autobalance();
     break;
     
   case (2): //High Goal and Move -- CONE
@@ -132,7 +132,7 @@ void Robot::AutonomousPeriodic()
     else if (autoTime < 11_s)
       drivetrain.drive(.5, .5);
     else if (autoTime < 15_s)
-      drivetrain.autobalance2();
+      drivetrain.autobalance();
     break;
 
     case (4): //High Goal and Move -- CUBE
