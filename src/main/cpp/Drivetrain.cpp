@@ -169,9 +169,12 @@ void Drivetrain::autobalance2()
 }
 void Drivetrain::turnToAngle(double angle) 
 {
-    turnPIDController.SetGoal({angle*1_deg, 0_deg_per_s});
-    double turnToAnglePower = turnPIDController.Calculate(gyro.GetYaw()*1_deg);
+    //turnPIDController.SetGoal({angle*1_deg, 0_deg_per_s});
+    double turnToAnglePower = turnPIDController.Calculate(gyro.GetYaw()*1_deg, angle*1_deg);
     std::cout << turnToAnglePower << endl;
-    mLeftController.SetReference(-turnToAnglePower, rev::CANSparkMax::ControlType::kDutyCycle);
-    mRightController.SetReference(turnToAnglePower, rev::CANSparkMax::ControlType::kDutyCycle);
+    mLeftMaster.SetVoltage(turnToAnglePower*0.5_V);
+    mRightMaster.SetVoltage(turnToAnglePower*0.5_V);
+    
+    //mLeftController.SetReference(-turnToAnglePower, rev::CANSparkMax::ControlType::kDutyCycle);
+    //mRightController.SetReference(turnToAnglePower, rev::CANSparkMax::ControlType::kDutyCycle);
 }
