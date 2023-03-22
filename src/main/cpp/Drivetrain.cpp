@@ -107,9 +107,11 @@ void Drivetrain::drive(double left, double right)
 void Drivetrain::driveDistance(units::meter_t dDistance)
 {
     //drivingPIDController.SetGoal({dDistance, 0_mps});
-    auto output = drivingPIDController.Calculate(units::meter_t(mLeftEncoder.GetPosition()), dDistance);
-    mLeftSide.SetVoltage(output*0.5_V);
-    mRightSide.SetVoltage(output*0.5_V);
+    auto outputR = drivingPIDController.Calculate(units::meter_t(mRightEncoder.GetPosition()), dDistance);
+    auto outputL = drivingPIDController.Calculate(units::meter_t(mLeftEncoder.GetPosition()), dDistance);
+    std::cout << "Drive Output: "<<outputL << endl;
+    mLeftSide.SetVoltage(outputL*0.5_V);
+    mRightSide.SetVoltage(outputR*0.5_V);
 }
 
 void Drivetrain::cheesyDrive(double throttle, double wheel, bool isQuickTurn)
