@@ -84,10 +84,12 @@ void Robot::AutonomousPeriodic()
     std::cout << "TIME: " << time2 <<endl;
     if (autoTime < 2.8_s)
       arm.setPosition(3000);
-    else if (autoTime < 4_s)
+    else if (autoTime < 4_s){
       intake.setSpeed(-0.8);
+      //arm.setPosition(1000);
+    }
     else if (autoTime < 9_s)
-      drivetrain.driveDistance(225_in);
+      drivetrain.driveDistance(275_in);
       //drivetrain.drive(0.5,0.5);
     else if (autoTime < 9.2_s)
     {
@@ -96,7 +98,7 @@ void Robot::AutonomousPeriodic()
     }
     else if (autoTime < 11_s)
     {
-      drivetrain.driveDistance(200_in);
+      drivetrain.driveDistance(175_in);
     }
     else if (autoTime < 15_s)
       drivetrain.autobalance2();

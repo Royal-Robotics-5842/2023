@@ -164,8 +164,8 @@ void Drivetrain::autobalance2()
     //autobalancePIDController.SetGoal({0_deg, 0_deg_per_s});
     //double output = autobalancePIDController.Calculate(gyro.GetPitch()*1_deg);
     double output = autobalancePIDController.Calculate(gyro.GetPitch(), 0); 
-    mLeftMaster.SetVoltage(-output*0.5_V);
-    mRightMaster.SetVoltage(-output*0.5_V);
+    mLeftMaster.SetVoltage(-output*0.25_V);
+    mRightMaster.SetVoltage(-output*0.25_V);
 }
 void Drivetrain::turnToAngle(double angle) 
 {
