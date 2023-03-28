@@ -21,9 +21,10 @@
 
 class Arm
 {
-    rev::CANSparkMax mArmMotor{31, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
-    rev::SparkMaxRelativeEncoder mArmEncoder{mArmMotor.GetEncoder()};
-    rev::SparkMaxPIDController mArmController{mArmMotor.GetPIDController()};
+    rev::CANSparkMax mLeftArm{31, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
+    rev::CANSparkMax mRightArm{32, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
+    rev::SparkMaxRelativeEncoder mArmEncoder{mLeftArm.GetEncoder()};
+    rev::SparkMaxPIDController mArmController{mLeftArm.GetPIDController()};
 
     frc::ArmFeedforward mArmFF{Constants::kArmS, Constants::kArmG, Constants::kArmV};
 

@@ -2,11 +2,18 @@
 
 Arm::Arm()
 {
-    mArmMotor.RestoreFactoryDefaults();
+    mLeftArm.RestoreFactoryDefaults();
+    mRightArm.RestoreFactoryDefaults();
 
-    mArmMotor.SetSmartCurrentLimit(12);
+    mLeftArm.SetSmartCurrentLimit(12);
+    mRightArm.SetSmartCurrentLimit(12);
 
-    mArmMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+    mRightArm.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+    mLeftArm.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+
+    mRightArm.SetInverted(true);
+
+    mRightArm.Follow(mLeftArm);
 
     mArmEncoder.SetPosition(0);
     mArmEncoder.SetPositionConversionFactor(360/Constants::kArmGearRatio);
@@ -50,9 +57,9 @@ void Arm::toggleMode()
 void Arm::brakeMode(bool input)
 {
     if (input)
-        mArmMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+        mLeftArm.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     else
-        mArmMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
+        mLeftArm.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
 
 }
 
@@ -62,7 +69,7 @@ void Arm::setSpeed(double speed)
     double scaledSpeed = (speed + (speed < 0 ? 0.1 : -0.1)) / (1 - 0.1);
     speed = (std::abs(speed) > 0.1) ? scaledSpeed : 0;
 
-    mArmMotor.Set(speed*.70);
+    mLeftArm.Set(speed*.70);
 }
 
 void Arm::setPosition(int preset)
