@@ -2,11 +2,18 @@
 
 Arm::Arm()
 {
-    mArmMotor.RestoreFactoryDefaults();
+    mLeftArm.RestoreFactoryDefaults();
+    mRightArm.RestoreFactoryDefaults();
 
-    mArmMotor.SetSmartCurrentLimit(12);
+    mLeftArm.SetSmartCurrentLimit(12);
+    mRightArm.SetSmartCurrentLimit(12);
 
-    mArmMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+    mRightArm.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+    mLeftArm.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+
+    mRightArm.SetInverted(true);
+
+    mRightArm.Follow(mLeftArm);
 
     mArmEncoder.SetPosition(0);
     mArmEncoder.SetPositionConversionFactor(360/Constants::kArmGearRatio);
@@ -17,11 +24,9 @@ Arm::Arm()
     mArmController.SetFF(0);
     mArmController.SetIZone(0);
 
-    mSetPoint = -5; //stowed
+    mSetPoint = -110; //stowed
     mConeMode = false; //cube mode
 }
-
-
 
 bool Arm::getMode()
 {
@@ -41,7 +46,6 @@ double Arm::getPosition()
 void Arm::resetPosition()
 {
     mArmEncoder.SetPosition(0);
-    mArmEncoder.SetPositionConversionFactor(360/Constants::kArmGearRatio);
 }
 
 void Arm::toggleMode()
@@ -50,22 +54,12 @@ void Arm::toggleMode()
     mConeMode ^= true;
 }
 
-void Arm::toggleConeMode()
-{
-    mConeMode = true;
-}
-
-void Arm::toggleCubeMode()
-{
-    mConeMode = false;
-}
-
 void Arm::brakeMode(bool input)
 {
     if (input)
-        mArmMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+        mLeftArm.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     else
-        mArmMotor.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
+        mLeftArm.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
 
 }
 
@@ -75,7 +69,7 @@ void Arm::setSpeed(double speed)
     double scaledSpeed = (speed + (speed < 0 ? 0.1 : -0.1)) / (1 - 0.1);
     speed = (std::abs(speed) > 0.1) ? scaledSpeed : 0;
 
-    mArmMotor.Set(speed*.70);
+    mLeftArm.Set(speed*.70);
 }
 
 void Arm::setPosition(int preset)
@@ -87,22 +81,22 @@ void Arm::setPosition(int preset)
 
         switch (preset)
         {
-            case 1000: //stowed
-                position = -5;
+            case 1: //stowed
+                position = -20;
                 break;
-            case 2000: //mid goal
+            case 2: //mid goal
                 //mConeMode ? heightIfCone : heightIfCube;
-                position = mConeMode ? 75 : 80;
+                position = mConeMode ? 75 : 75;
                 break;
-            case 3000: //high goal
-                position = mConeMode ? 135 : 135;
+            case 3: //high goal
+                position = mConeMode ? 148 : 148;
                 break;
-            case 4000: //low goal
-                position = mConeMode ? 33 : 38;
+            case 4: //human player
+                position = mConeMode ? 80 : 70;
                 break;
-            default: //manual override, hold position
+            /*default: //manual override, hold position
                 position = getPosition();
-                break;
+                break;*/
         }
         
         m_goal = {(position * 1_deg), 0_deg_per_s};
