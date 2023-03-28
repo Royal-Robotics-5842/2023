@@ -21,9 +21,9 @@ frc::Timer t;
 
 void Robot::RobotInit() 
 {
-  m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
-  m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
-  frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
+//   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
+//   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
+//   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 }
 
 void Robot::RobotPeriodic() 
@@ -33,25 +33,25 @@ void Robot::RobotPeriodic()
 
 void Robot::AutonomousInit() 
 {
-  m_autoSelected = m_chooser.GetSelected();
+  // m_autoSelected = m_chooser.GetSelected();
   t.Restart();
 }
 
 void Robot::AutonomousPeriodic() 
 {
-  units::second_t autotime = t.Get();
-  
   units::second_t autoTime = t.Get();
-  if (m_autoSelected == kAutoNameCustom) {
-    if (autoTime < 5_s)
-    {
-      drivetrain.drive(.4,.4);
-      arm.brakeMode(true);
-    }
-    else
-      drivetrain.enableBrake(true);
-  } 
-  else {
+  int qwerty = (autoTime/1_s);
+  cout<<qwerty<<endl;
+  // if (m_autoSelected == kAutoNameCustom) {
+  //   if (autoTime < 5_s)
+  //   {
+  //     drivetrain.drive(.4,.4);
+  //     arm.brakeMode(true);
+  //   }
+  //   else
+  //     drivetrain.enableBrake(true);
+  // } 
+  // else {
     if (autoTime < 1_s)
     {
       drivetrain.drive(.5,.5);
@@ -78,7 +78,7 @@ void Robot::AutonomousPeriodic()
       arm.setPosition(1000);
     else
       arm.brakeMode(true);
-  }
+  // }
   
   
 }

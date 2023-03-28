@@ -1,10 +1,11 @@
 #pragma once
 
-#include "ctre/phoenix/motorcontrol/can/VictorSPX.h"
+#include "rev/CANSparkMax.h"
 
 class Intake
 {
-    ctre::phoenix::motorcontrol::can::VictorSPX mIntakeMotor{21};
+    rev::CANSparkMax mLeftIntake{21, rev::CANSparkMax::MotorType::kBrushless};
+    rev::CANSparkMax mRightIntake{22, rev::CANSparkMax::MotorType::kBrushless};
 
     public:
     Intake();
