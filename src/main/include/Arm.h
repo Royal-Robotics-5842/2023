@@ -21,9 +21,11 @@
 
 class Arm
 {
-    rev::CANSparkMax mArmMotor{31, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
-    rev::SparkMaxRelativeEncoder mArmEncoder{mArmMotor.GetEncoder()};
-    rev::SparkMaxPIDController mArmController{mArmMotor.GetPIDController()};
+    rev::CANSparkMax mLeftArm{31, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
+    rev::CANSparkMax mRightArm{32, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
+    rev::SparkMaxRelativeEncoder mArmEncoder{mLeftArm.GetEncoder()};
+    rev::SparkMaxPIDController mLeftArmController{mLeftArm.GetPIDController()};
+    rev::SparkMaxPIDController mRightArmController{mRightArm.GetPIDController()};
 
     frc::ArmFeedforward mArmFF{Constants::kArmS, Constants::kArmG, Constants::kArmV};
 
@@ -47,7 +49,7 @@ class Arm
     void brakeMode(bool input);
 
     static constexpr units::second_t kDt = 20_ms;
-    frc::TrapezoidProfile<units::degrees>::Constraints m_constraints{160_deg_per_s, 180_deg_per_s_sq};
+    frc::TrapezoidProfile<units::degrees>::Constraints m_constraints{60_deg_per_s, 60_deg_per_s_sq};
     frc::TrapezoidProfile<units::degrees>::State m_goal;
     frc::TrapezoidProfile<units::degrees>::State m_setpoint;
 };

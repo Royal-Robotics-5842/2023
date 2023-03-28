@@ -18,11 +18,17 @@ Arm::Arm()
     mArmEncoder.SetPosition(0);
     mArmEncoder.SetPositionConversionFactor(360/Constants::kArmGearRatio);
 
-    mArmController.SetP(0.012496);
-    mArmController.SetI(0);
-    mArmController.SetD(0.0062782);
-    mArmController.SetFF(0);
-    mArmController.SetIZone(0);
+    mLeftArmController.SetP(0.012496);
+    mLeftArmController.SetI(0);
+    mLeftArmController.SetD(0.0062782);
+    mLeftArmController.SetFF(0);
+    mLeftArmController.SetIZone(0);
+
+    mRightArmController.SetP(0.012496);
+    mRightArmController.SetI(0);
+    mRightArmController.SetD(0.0062782);
+    mRightArmController.SetFF(0);
+    mRightArmController.SetIZone(0);
 
     mSetPoint = -110; //stowed
     mConeMode = false; //cube mode
@@ -54,6 +60,15 @@ void Arm::toggleMode()
     mConeMode ^= true;
 }
 
+void Arm::toggleConeMode()
+{
+    mConeMode = true;
+}
+
+void Arm::toggleCubeMode()
+{
+    mConeMode = false;
+}
 void Arm::brakeMode(bool input)
 {
     if (input)
@@ -105,6 +120,7 @@ void Arm::setPosition(int preset)
 
         std::cout << "Setpoint: " << m_setpoint.position.value() << std::endl; 
         
-        mArmController.SetReference(m_setpoint.position.value(), rev::CANSparkMax::ControlType::kPosition, 0);// mArmFF.Calculate(m_setpoint.position.value()*1_deg, 100_deg/1_s).value());
+        mLeftArmController.SetReference(m_setpoint.position.value(), rev::CANSparkMax::ControlType::kPosition, 0);// mArmFF.Calculate(m_setpoint.position.value()*1_deg, 100_deg/1_s).value());
+        mRightArmController.SetReference(m_setpoint.position.value(), rev::CANSparkMax::ControlType::kPosition, 0);
     }
 }

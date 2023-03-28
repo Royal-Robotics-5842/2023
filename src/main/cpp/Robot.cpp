@@ -101,7 +101,7 @@ void Robot::AutonomousPeriodic()
       drivetrain.driveDistance(175_in);
     }
     else if (autoTime < 15_s)
-      drivetrain.autobalance2();
+      drivetrain.autobalance();
     
     /*
     if (autoTime < 4_s) 

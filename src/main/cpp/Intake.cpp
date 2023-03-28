@@ -2,12 +2,17 @@
 
 Intake::Intake()
 {
-    mIntakeMotor.ConfigFactoryDefault();
+    mLeftIntake.RestoreFactoryDefaults();
+    mRightIntake.RestoreFactoryDefaults();
 
-    mIntakeMotor.SetNeutralMode(ctre::phoenix::motorcontrol::NeutralMode::Brake);
+    mRightIntake.SetInverted(true);
+
+    mRightIntake.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+    mLeftIntake.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 }
 
 void Intake::setSpeed(double speed)
 {
-    mIntakeMotor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+    mLeftIntake.Set(speed);
+    mRightIntake.Set(speed);
 }
