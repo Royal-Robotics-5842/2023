@@ -20,10 +20,10 @@ Drivetrain::Drivetrain()
     mRightSlave.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
 
     //right motors are opposite left motors, so must spin other direction
-    mLeftMaster.SetInverted(true);
-    mLeftSlave.SetInverted(true);
-    mRightMaster.SetInverted(false);
-    mRightSlave.SetInverted(false);
+    mLeftMaster.SetInverted(false);
+    mLeftSlave.SetInverted(false);
+    mRightMaster.SetInverted(true);
+    mRightSlave.SetInverted(true);
 
     //set slaves to follow/mimic masters
     mLeftSlave.Follow(mLeftMaster);

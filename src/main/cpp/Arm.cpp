@@ -13,7 +13,7 @@ Arm::Arm()
 
     mRightArm.SetInverted(true);
 
-    mRightArm.Follow(mLeftArm);
+    //mRightArm.Follow(mLeftArm);
 
     mArmEncoder.SetPosition(0);
     mArmEncoder.SetPositionConversionFactor(360/Constants::kArmGearRatio);
@@ -84,7 +84,8 @@ void Arm::setSpeed(double speed)
     double scaledSpeed = (speed + (speed < 0 ? 0.1 : -0.1)) / (1 - 0.1);
     speed = (std::abs(speed) > 0.1) ? scaledSpeed : 0;
 
-    mLeftArm.Set(speed*.70);
+    mLeftArm.Set(speed*0.8);
+    mRightArm.Set(speed*0.8);
 }
 
 void Arm::setPosition(int preset)

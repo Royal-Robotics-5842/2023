@@ -216,7 +216,14 @@ void Robot::TeleopPeriodic()
     //manual control setpoint needed to not revert to the previous position once manual controls stop
     armSetPoint = 0;
     double armSpeed = (controller.GetRightY() - 0.3)/(0.7);
-    arm.setSpeed(-1*armSpeed);
+    if (armSpeed < 0)
+    {
+      arm.setSpeed(armSpeed*0.5);
+    }
+    else
+    {
+      arm.setSpeed(armSpeed);
+    }
   }
   else if (armSetPoint != 0)
   {
