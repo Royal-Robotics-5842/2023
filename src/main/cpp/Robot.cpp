@@ -26,7 +26,7 @@ void Robot::RobotInit()
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   //m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
-  arm.resetPosition();
+  arm.resetEncoder();
 
 }
 
@@ -276,7 +276,7 @@ void Robot::DisabledPeriodic() {}
 
 
 void Robot::TestInit() {
-  arm.resetPosition();
+  arm.resetEncoder();
   arm.brakeMode(false);
   arm.setSpeed(0);
 }
@@ -289,7 +289,7 @@ void Robot::TestInit() {
 void Robot::TestPeriodic() {
   //Reset position once it's properly 0'd out
   if (controller.GetAButtonPressed())
-    arm.resetPosition();
+    arm.resetEncoder();
   std::cout << arm.getPosition() << endl;
 }
 

@@ -38,7 +38,7 @@ class Arm
     bool getMode();
     double getSetpoint();
     double getPosition();
-    void resetPosition();
+    void resetEncoder();
 
     void toggleMode();
     void toggleConeMode();
