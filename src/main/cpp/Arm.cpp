@@ -49,7 +49,7 @@ double Arm::getPosition()
     return mArmEncoder.GetPosition();
 }
 
-void Arm::resetPosition()
+void Arm::resetEncoder()
 {
     mArmEncoder.SetPosition(0);
 }
