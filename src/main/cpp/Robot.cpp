@@ -86,6 +86,7 @@ void Robot::AutonomousPeriodic()
     //if (autoTime < 2.8_s)
         //drivetrain.drive(0.0,0.0);
       //arm.setPosition(3000);
+    /*
     if (autoTime < 4_s){
       intake.setSpeed(-0.8);
       arm.brakeMode(true);
@@ -105,8 +106,8 @@ void Robot::AutonomousPeriodic()
     {
       drivetrain.driveDistance(-30_in);
     }
-    
-    else if (autoTime < 30_s)
+    */
+    if (autoTime < 30_s)
       drivetrain.autobalance();
     
     /*
@@ -206,16 +207,16 @@ void Robot::TeleopPeriodic()
     arm.toggleConeMode();
   if (controller.GetPOV() == 270)
     arm.toggleCubeMode();
-  if (controller.GetAButtonPressed()) 
-    armSetPoint = 1000;//stowed
+  if (controller.GetBButtonPressed())
+      armSetPoint = 1000; //stowed
   else if (controller.GetXButtonPressed())
-    armSetPoint = 2000;//midgoal
+      armSetPoint = 4000; //human player
   else if (controller.GetYButtonPressed())
-    armSetPoint = 3000;//highgoal
-  else if (controller.GetBButtonPressed())
-    armSetPoint = 4000;//humanplayer
-
+      armSetPoint = 3000; //high goal
+  else if (controller.GetAButtonPressed())
+      armSetPoint = 6000; //ground goal
   lastPosition = arm.getPosition();
+
   //manual control overrides position control
   if (std::abs(controller.GetRightY()) > 0.3)
   {
@@ -236,19 +237,14 @@ void Robot::TeleopPeriodic()
     //grab desired arm point on button press
     //this is sticky (we retain the setpoint until another input is received or manual control is initiated)
     if (controller.GetBButtonPressed())
-    {
-      arm.setPosition(1000); //stowed
-    }
+      armSetPoint = 1000; //stowed
     else if (controller.GetXButtonPressed())
-    {
-      arm.setPosition(4000); //human player
-      //std::cout << "SET POSITION: "<< arm.setPosition() <<endl; 
-    }
+      armSetPoint = 4000; //human player
     else if (controller.GetYButtonPressed())
-      arm.setPosition(3000); //high goal
+      armSetPoint = 3000; //high goal
     else if (controller.GetAButtonPressed())
-      arm.setPosition(6000); //low goal
-      //arm.setPosition(armSetPoint);
+      armSetPoint = 6000; //ground goal
+    arm.setPosition(armSetPoint);
   }
   else
   {

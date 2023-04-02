@@ -163,10 +163,12 @@ void Drivetrain::autobalance()
 {
     //autobalancePIDController.SetGoal({0_deg, 0_deg_per_s});
     //double output = autobalancePIDController.Calculate(gyro.GetPitch()*1_deg);
-    double output = autobalancePIDController.Calculate(gyro.GetPitch() - 86.72, 0); 
-    mLeftMaster.SetVoltage(output*0.12_V);
-    mRightMaster.SetVoltage(output*0.12_V);
-    std::cout << "GYRO: " << gyro.GetPitch() <<endl;
+    double output = autobalancePIDController.Calculate(gyro.GetPitch() , 0); 
+    mLeftMaster.SetVoltage(-output*0.12_V);
+    mRightMaster.SetVoltage(-output*0.12_V);
+    std::cout << "PITCH: " << gyro.GetPitch() <<endl;
+    std::cout << "YAW: " << gyro.GetYaw() <<endl;
+    std::cout << "ROLL: " << gyro.GetRoll() <<endl;
 }
 void Drivetrain::turnToAngle(double angle) 
 {
