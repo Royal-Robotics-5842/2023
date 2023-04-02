@@ -56,7 +56,7 @@ public:
     static constexpr auto kArmG = 0.14945 * 1_V;
     static constexpr auto kArmV = 0.050359 * 1_V / 1_rad_per_s;
 
-    static constexpr auto kArmGearRatio = 75;
+    static constexpr auto kArmGearRatio = 228.5;
     static constexpr auto kLowGearRatio = 10.75;
 
 };

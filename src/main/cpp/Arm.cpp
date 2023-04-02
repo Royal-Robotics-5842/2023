@@ -5,8 +5,8 @@ Arm::Arm()
     mLeftArm.RestoreFactoryDefaults();
     mRightArm.RestoreFactoryDefaults();
 
-    mLeftArm.SetSmartCurrentLimit(12);
-    mRightArm.SetSmartCurrentLimit(12);
+    mLeftArm.SetSmartCurrentLimit(30);
+    mRightArm.SetSmartCurrentLimit(30);
 
     mRightArm.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
     mLeftArm.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
@@ -18,15 +18,15 @@ Arm::Arm()
     mArmEncoder.SetPosition(0);
     mArmEncoder.SetPositionConversionFactor(360/Constants::kArmGearRatio);
 
-    mLeftArmController.SetP(0.012496);
+    mLeftArmController.SetP(0.0052272);
     mLeftArmController.SetI(0);
-    mLeftArmController.SetD(0.0062782);
+    mLeftArmController.SetD(0.0);
     mLeftArmController.SetFF(0);
     mLeftArmController.SetIZone(0);
 
-    mRightArmController.SetP(0.012496);
+    mRightArmController.SetP(0.0052272);
     mRightArmController.SetI(0);
-    mRightArmController.SetD(0.0062782);
+    mRightArmController.SetD(0.0);
     mRightArmController.SetFF(0);
     mRightArmController.SetIZone(0);
 
@@ -71,10 +71,13 @@ void Arm::toggleCubeMode()
 }
 void Arm::brakeMode(bool input)
 {
-    if (input)
+    if (input) {
         mLeftArm.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
-    else
+        mRightArm.SetIdleMode(rev::CANSparkMax::IdleMode::kBrake);
+    } else {
         mLeftArm.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
+        mRightArm.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
+    }
 
 }
 
@@ -84,8 +87,8 @@ void Arm::setSpeed(double speed)
     double scaledSpeed = (speed + (speed < 0 ? 0.1 : -0.1)) / (1 - 0.1);
     speed = (std::abs(speed) > 0.1) ? scaledSpeed : 0;
 
-    mLeftArm.Set(speed*0.8);
-    mRightArm.Set(speed*0.8);
+    mLeftArm.Set(speed);
+    mRightArm.Set(speed);
 }
 
 void Arm::setPosition(int preset)
@@ -97,22 +100,30 @@ void Arm::setPosition(int preset)
 
         switch (preset)
         {
-            case 1: //stowed
-                position = -20;
+            case 1000: //stowed
+                position = 3;
                 break;
-            case 2: //mid goal
+            case 2000: //mid goal
                 //mConeMode ? heightIfCone : heightIfCube;
-                position = mConeMode ? 75 : 75;
+                position = mConeMode ? 122.2 : 122.2;
                 break;
-            case 3: //high goal
-                position = mConeMode ? 148 : 148;
+            case 3000: //high goal
+                position = mConeMode ? 152.2 : 152.2;
                 break;
-            case 4: //human player
-                position = mConeMode ? 80 : 70;
+            case 4000: //human player
+                position = mConeMode ? 33.4 : 33.4;
+                break;
+            case 5000: //low goal
+                position = mConeMode ? 26.3 : 26.3;
+                break;
+            case 6000: //ground cube intake
+                position = mConeMode ? 98.47 : 98.47;
                 break;
             /*default: //manual override, hold position
                 position = getPosition();
                 break;*/
+            
+            //return position;
         }
         
         m_goal = {(position * 1_deg), 0_deg_per_s};
@@ -123,5 +134,6 @@ void Arm::setPosition(int preset)
         
         mLeftArmController.SetReference(m_setpoint.position.value(), rev::CANSparkMax::ControlType::kPosition, 0);// mArmFF.Calculate(m_setpoint.position.value()*1_deg, 100_deg/1_s).value());
         mRightArmController.SetReference(m_setpoint.position.value(), rev::CANSparkMax::ControlType::kPosition, 0);
+        //arm.
     }
 }

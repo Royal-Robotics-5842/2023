@@ -1,3 +1,4 @@
+/*
 #pragma once
 
 #include <frc/Compressor.h>
@@ -19,3 +20,4 @@ public:
     Pneumatics();
     void shiftGears();
 };
+*/

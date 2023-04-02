@@ -78,29 +78,35 @@ void Robot::AutonomousPeriodic()
 {
   units::second_t autoTime = t.Get();
   double time2 = autoTime/1_s;
+  
   switch (auton)
   {   
   case (1): //High Goal and Balance -- CONE
     std::cout << "TIME: " << time2 <<endl;
-    if (autoTime < 2.8_s)
-      arm.setPosition(3000);
-    else if (autoTime < 4_s){
+    //if (autoTime < 2.8_s)
+        //drivetrain.drive(0.0,0.0);
+      //arm.setPosition(3000);
+    if (autoTime < 4_s){
       intake.setSpeed(-0.8);
+      arm.brakeMode(true);
       //arm.setPosition(1000);
     }
     else if (autoTime < 9_s)
+    {
       drivetrain.driveDistance(275_in);
+    }
       //drivetrain.drive(0.5,0.5);
-    else if (autoTime < 9.2_s)
+   else if (autoTime < 9.2_s)
     {
       intake.setSpeed(0);
       drivetrain.enableBrake(true);
     }
-    else if (autoTime < 11_s)
+    else if (autoTime < 12_s)
     {
-      drivetrain.driveDistance(175_in);
+      drivetrain.driveDistance(-30_in);
     }
-    else if (autoTime < 15_s)
+    
+    else if (autoTime < 30_s)
       drivetrain.autobalance();
     
     /*
@@ -158,8 +164,8 @@ void Robot::AutonomousPeriodic()
       drivetrain.enableBrake(true);
     break;
     */
+  }//
   }
-}
 
 void Robot::TeleopInit() {
   arm.brakeMode(true);
@@ -200,14 +206,14 @@ void Robot::TeleopPeriodic()
     arm.toggleConeMode();
   if (controller.GetPOV() == 270)
     arm.toggleCubeMode();
-  if (controller.GetAButtonPressed())
-    armSetPoint = 1000;
+  if (controller.GetAButtonPressed()) 
+    armSetPoint = 1000;//stowed
   else if (controller.GetXButtonPressed())
-    armSetPoint = 2000;
+    armSetPoint = 2000;//midgoal
   else if (controller.GetYButtonPressed())
-    armSetPoint = 3000;
+    armSetPoint = 3000;//highgoal
   else if (controller.GetBButtonPressed())
-    armSetPoint = 4000;
+    armSetPoint = 4000;//humanplayer
 
   lastPosition = arm.getPosition();
   //manual control overrides position control
@@ -230,14 +236,19 @@ void Robot::TeleopPeriodic()
     //grab desired arm point on button press
     //this is sticky (we retain the setpoint until another input is received or manual control is initiated)
     if (controller.GetBButtonPressed())
-      armSetPoint = 4000; //stowed
+    {
+      arm.setPosition(1000); //stowed
+    }
     else if (controller.GetXButtonPressed())
-      armSetPoint = 2000; //mid goal
+    {
+      arm.setPosition(4000); //human player
+      //std::cout << "SET POSITION: "<< arm.setPosition() <<endl; 
+    }
     else if (controller.GetYButtonPressed())
-      armSetPoint = 3000; //high goal
+      arm.setPosition(3000); //high goal
     else if (controller.GetAButtonPressed())
-      armSetPoint = 1000; //low goal
-    arm.setPosition(armSetPoint);
+      arm.setPosition(6000); //low goal
+      //arm.setPosition(armSetPoint);
   }
   else
   {
