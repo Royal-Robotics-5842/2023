@@ -18,7 +18,7 @@ Arm::Arm()
     mArmEncoder.SetPosition(0);
     mArmEncoder.SetPositionConversionFactor(360/Constants::kArmGearRatio);
 
-    mLeftArmController.SetP(0.0052272);
+    mLeftArmController.SetP(0.052272);
     mLeftArmController.SetI(0);
     mLeftArmController.SetD(0);
     mLeftArmController.SetFF(0);
