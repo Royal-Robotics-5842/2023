@@ -87,7 +87,14 @@ void Arm::setSpeed(double speed)
     double scaledSpeed = (speed + (speed < 0 ? 0.1 : -0.1)) / (1 - 0.1);
     speed = (std::abs(speed) > 0.1) ? scaledSpeed : 0;
 
-    mLeftArm.Set(speed);
+    if (speed < 0)
+    {
+      mLeftArm.Set(speed*0.5);
+    }
+    else
+    {
+      mLeftArm.Set(speed);
+    }
     //mRightArm.Set(speed);
 }
 
@@ -132,7 +139,7 @@ void Arm::setPosition(int preset)
         m_goal = {(position * 1_deg), 0_deg_per_s};
         frc::TrapezoidProfile<units::degrees> profile{m_constraints, m_goal, m_setpoint};
         m_setpoint = profile.Calculate(kDt);
-
+        //double output = mLeftArmPIDController.Calculate(mLeftArm.GetEncoder(), position);
         std::cout << "Setpoint: " << m_setpoint.position.value() << std::endl; 
         
         mLeftArmController.SetReference(m_setpoint.position.value(), rev::CANSparkMax::ControlType::kPosition, 0);// mArmFF.Calculate(m_setpoint.position.value()*1_deg, 100_deg/1_s).value());

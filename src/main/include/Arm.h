@@ -26,7 +26,7 @@ class Arm
     rev::SparkMaxRelativeEncoder mArmEncoder{mLeftArm.GetEncoder()};
     rev::SparkMaxPIDController mLeftArmController{mLeftArm.GetPIDController()};
     rev::SparkMaxPIDController mRightArmController{mRightArm.GetPIDController()};
-
+    frc2::PIDController mLeftArmPIDController{0.0052272, 0.0, 0.0,};
     frc::ArmFeedforward mArmFF{Constants::kArmS, Constants::kArmG, Constants::kArmV};
 
     bool mConeMode;
