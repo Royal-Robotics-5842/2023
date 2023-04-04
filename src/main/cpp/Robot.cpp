@@ -43,12 +43,12 @@ void Robot::AutonomousInit()
   t.Restart();
   while(i == 1)
   {
-    if (controller.GetYButtonPressed())
+    if (controller.GetYButton())
     {
         auton = 1;
         break;
     }
-    else if (controller.GetBButtonPressed()) 
+    else if (controller.GetBButton()) 
     {
         auton = 2;
         break;
@@ -81,48 +81,35 @@ void Robot::AutonomousPeriodic()
   
   switch (auton)
   {   
-  case (1): //High Goal and Balance -- CONE
+  case (2): //High Goal and Balance -- CONE
     std::cout << "TIME: " << time2 <<endl;
-    if (autoTime < 2.8_s)
+    
+    if (autoTime < 4.8_s)
+    {
       arm.setPosition(3000);
-    else if (autoTime < 4_s){
-      intake.setSpeed(-0.8);
       arm.brakeMode(true);
-      arm.setPosition(1000);
+    }
+    else if (autoTime < 5.8_s){
+      intake.setSpeed(-0.8);
     }
     else if (autoTime < 9_s)
     {
-      drivetrain.driveDistance(275_in);
-    }
-    else if (autoTime < 9.1_s)
-    {
+      arm.setPosition(1000);
+      drivetrain.driveDistance(300_in);
       intake.setSpeed(0);
+    }
+    else if (autoTime < 10.1_s)
+    {
       drivetrain.enableBrake(true);
     }
-    else if (autoTime < 11_s)
+    else if (autoTime < 12_s)
     {
-      drivetrain.driveDistance(-30_in);
+      drivetrain.drive(-0.6, -0.6);
     }
-    else if (autoTime < 15_s)
+    else if (autoTime < 30_s)
       drivetrain.autobalance();
     
-    /*
-    if (autoTime < 4_s) 
-	    arm.setPosition(3000);
-    else if (autoTime < 6_s)
-      intake.setSpeed(-0.7);
-    //else if (autoTime < 8_s)
-    //  intake.setSpeed(-0.7);
-    else if (autoTime < 9_s){
-      drivetrain.drive(.5, .5);
-      intake.setSpeed(0);
-    }
-    else if (autoTime < 15_s)
-      drivetrain.autobalance();
-    break;
-    */
-   
-  case (2): //2 Placements
+  case (1): //2 Placements
     if (autoTime < 2.8_s)
     {
       arm.setPosition(3000);
@@ -131,35 +118,38 @@ void Robot::AutonomousPeriodic()
     {
       intake.setSpeed(-0.8);
       arm.brakeMode(true);
-      arm.setPosition(1000);
     }
     else if (autoTime < 7_s)
     {
-      drivetrain.driveDistance(230_in);
-    }
-    else if (autoTime < 9_s)
-    {
-      drivetrain.turnToAngle(180);
-    }
-    else if (autoTime < 10_s)
-    {
-      arm.setPosition(6000); //ground pick up
-      drivetrain.driveDistance(50_in);
+      arm.setPosition(1000);
+      drivetrain.driveDistance(300_in);
     }
     else if (autoTime < 11_s)
     {
-      drivetrain.turnToAngle(180);
+      drivetrain.turnToAngle(200);
+    }
+    else if (autoTime < 12_s)
+    {
+      arm.setPosition(6000); //ground pick up
+      intake.setSpeed(0.8);
+      drivetrain.driveDistance(50_in);
     }
     else if (autoTime < 13_s)
     {
-      drivetrain.driveDistance(-250_in);
+      intake.setSpeed(0);
+      drivetrain.turnToAngle(200);
     }
     else if (autoTime < 15_s)
     {
-      drivetrain.turnToAngle(20);
-      arm.setPosition(3000);
-      intake.setSpeed(0.8);
+      drivetrain.driveDistance(-250_in);
     }
+    else if (autoTime < 30_s)
+    {
+      drivetrain.turnToAngle(40);
+      arm.setPosition(3000);
+      intake.setSpeed(-0.8);
+    }
+    
 /*
   case (3): //High Goal and Balance -- CUBE
     if (autoTime < 4_s) 
@@ -314,6 +304,7 @@ void Robot::TestPeriodic() {
   if (controller.GetAButtonPressed())
     arm.resetEncoder();
   std::cout << arm.getPosition() << endl;
+  //std::cout << gyro.getPitch() << endl;
 }
 
 

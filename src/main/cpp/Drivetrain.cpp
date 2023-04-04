@@ -163,21 +163,21 @@ void Drivetrain::autobalance()
 {
     //autobalancePIDController.SetGoal({0_deg, 0_deg_per_s});
     //double output = autobalancePIDController.Calculate(gyro.GetPitch()*1_deg);
-    double output = autobalancePIDController.Calculate(gyro.GetPitch() , 0); 
-    mLeftMaster.SetVoltage(-output*0.12_V);
-    mRightMaster.SetVoltage(-output*0.12_V);
+    double output = autobalancePIDController.Calculate(gyro.GetPitch()-2 , 0); 
+    mLeftMaster.SetVoltage(-output*0.25_V);
+    mRightMaster.SetVoltage(-output*0.25_V);
     std::cout << "PITCH: " << gyro.GetPitch() <<endl;
     std::cout << "YAW: " << gyro.GetYaw() <<endl;
     std::cout << "ROLL: " << gyro.GetRoll() <<endl;
 }
 void Drivetrain::turnToAngle(double angle) 
 {
-    //turnPIDController.SetGoal({angle*1_deg, 0_deg_per_s});
+    turnPIDController.SetGoal({angle*1_deg, 0_deg_per_s});
     double turnToAnglePower = turnPIDController.Calculate(gyro.GetYaw()*1_deg, angle*1_deg);
     std::cout << turnToAnglePower << endl;
-    mLeftMaster.SetVoltage(turnToAnglePower*0.5_V);
-    mRightMaster.SetVoltage(turnToAnglePower*0.5_V);
+    //mLeftMaster.SetVoltage(turnToAnglePower*0.35_V);
+    //mRightMaster.SetVoltage(turnToAnglePower*0.35_V);
     
-    //mLeftController.SetReference(-turnToAnglePower, rev::CANSparkMax::ControlType::kDutyCycle);
-    //mRightController.SetReference(turnToAnglePower, rev::CANSparkMax::ControlType::kDutyCycle);
+    mLeftController.SetReference(-turnToAnglePower, rev::CANSparkMax::ControlType::kDutyCycle);
+    mRightController.SetReference(turnToAnglePower, rev::CANSparkMax::ControlType::kDutyCycle);
 }

@@ -20,11 +20,11 @@ Arm::Arm()
 
     mLeftArmController.SetP(0.052272);
     mLeftArmController.SetI(0);
-    mLeftArmController.SetD(0);
+    mLeftArmController.SetD(0.042105);
     mLeftArmController.SetFF(0);
     mLeftArmController.SetIZone(0);
 
-    mRightArmController.SetP(0.0052272);
+    mRightArmController.SetP(0.052272);
     mRightArmController.SetI(0);
     mRightArmController.SetD(0);
     mRightArmController.SetFF(0);
@@ -135,8 +135,8 @@ void Arm::setPosition(int preset)
             
             //return position;
         }
-        
-        m_goal = {(position * 1_deg), 0_deg_per_s};
+        std::cout << "HI: "<< mArmEncoder.GetPosition();
+        m_goal = {position  * 1_deg, 0_deg_per_s};
         frc::TrapezoidProfile<units::degrees> profile{m_constraints, m_goal, m_setpoint};
         m_setpoint = profile.Calculate(kDt);
         //double output = mLeftArmPIDController.Calculate(mLeftArm.GetEncoder(), position);
