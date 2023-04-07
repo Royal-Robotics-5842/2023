@@ -5,6 +5,7 @@
 #pragma once
 
 #include <string>
+#include "AHRS.h"
 
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
@@ -30,5 +31,6 @@ class Robot : public frc::TimedRobot {
   const std::string kAutoNameDefault = "Default";
   const std::string kAutoNameCustom = "My Auto";
   std::string m_autoSelected;
+  AHRS gyro{frc::SPI::Port::kMXP};
 
 };

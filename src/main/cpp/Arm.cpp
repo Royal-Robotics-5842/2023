@@ -18,13 +18,13 @@ Arm::Arm()
     mArmEncoder.SetPosition(0);
     mArmEncoder.SetPositionConversionFactor(360/Constants::kArmGearRatio);
 
-    mLeftArmController.SetP(0.052272);
+    mLeftArmController.SetP(0.075); //0.052272
     mLeftArmController.SetI(0);
-    mLeftArmController.SetD(0.042105);
+    mLeftArmController.SetD(0.052105);
     mLeftArmController.SetFF(0);
     mLeftArmController.SetIZone(0);
 
-    mRightArmController.SetP(0.052272);
+    mRightArmController.SetP(0.75);
     mRightArmController.SetI(0);
     mRightArmController.SetD(0);
     mRightArmController.SetFF(0);
@@ -84,8 +84,8 @@ void Arm::brakeMode(bool input)
 void Arm::setSpeed(double speed)
 {
     //deadzone handling -- ensures inputs are still within the range [0, 1] even after discarding the inputs up to 0.05
-    double scaledSpeed = (speed + (speed < 0 ? 0.1 : -0.1)) / (1 - 0.1);
-    speed = (std::abs(speed) > 0.1) ? scaledSpeed : 0;
+    double scaledSpeed = (speed + (speed < 0 ? 0.17 : -0.17)) / (1 - 0.17);
+    speed = (std::abs(speed) > 0.17) ? scaledSpeed : 0;
 
     if (speed < 0)
     {
@@ -112,13 +112,13 @@ void Arm::setPosition(int preset)
                 break;
             case 2000: //mid goal
                 //mConeMode ? heightIfCone : heightIfCube;
-                position = mConeMode ? -122.2 : -122.2;
+                position = mConeMode ? -124.9 : -124.9;
                 break;
             case 3000: //high goal
-                position = mConeMode ? -145 : -145;
+                position = mConeMode ? -147 : -147;
                 break;
             case 4000: //human player
-                position = mConeMode ? -33.4 : -33.4;
+                position = mConeMode ? -31.8 : -31.8; //-33.3 : -33.3
                 break;
             case 5000: //low goal
                 position = mConeMode ? -26.3 : -26.3;

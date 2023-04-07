@@ -1,15 +1,16 @@
-/*
-#pragma once
+
 #include "Pneumatics.h"
 
-Pneaumatics::Pneumatics()
+Pneumatics::Pneumatics()
 {
-    pcmCompressor.EnableDigital();
 }
 
-void Pneaumatics::shiftGears()
+void Pneumatics::enableCompressor()
 {
-    SolenoidPCM.Toggle();
+    mHub.EnableCompressorDigital();
 }
-
-*/
+void Pneumatics::shiftGears()
+{
+    mShifter.Toggle();
+    //std::cout << SolenoidPCM.Toggle() << endl;
+}

@@ -110,8 +110,8 @@ void Drivetrain::driveDistance(units::meter_t dDistance)
     auto outputR = drivingPIDController.Calculate(units::meter_t(mRightEncoder.GetPosition()), dDistance);
     auto outputL = drivingPIDController.Calculate(units::meter_t(mLeftEncoder.GetPosition()), dDistance);
     std::cout << "Drive Output: "<<outputL << endl;
-    mLeftSide.SetVoltage(outputL*0.25_V);
-    mRightSide.SetVoltage(outputR*0.25_V);
+    mLeftSide.SetVoltage(outputL*1_V);
+    mRightSide.SetVoltage(outputR*1_V);
 }
 
 void Drivetrain::cheesyDrive(double throttle, double wheel, bool isQuickTurn)
@@ -179,5 +179,5 @@ void Drivetrain::turnToAngle(double angle)
     //mRightMaster.SetVoltage(turnToAnglePower*0.35_V);
     
     mLeftController.SetReference(-turnToAnglePower, rev::CANSparkMax::ControlType::kDutyCycle);
-    mRightController.SetReference(turnToAnglePower, rev::CANSparkMax::ControlType::kDutyCycle);
+   // mRightController.SetReference(turnToAnglePower, rev::CANSparkMax::ControlType::kDutyCycle);
 }

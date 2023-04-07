@@ -6,6 +6,7 @@
 #include "Drivetrain.h"
 #include "Arm.h"
 #include "Intake.h"
+#include "Pneumatics.h"
 #include "frc/XboxController.h"
 
 #include <fmt/core.h>
@@ -18,6 +19,7 @@ frc::XboxController controller{1};
 Arm arm;
 Intake intake;
 frc::Timer t;
+Pneumatics Pneumatic;
 
 int auton;
 
@@ -80,13 +82,15 @@ void Robot::AutonomousPeriodic()
   double time2 = autoTime/1_s;
   
   switch (auton)
-  {   
-  case (2): //High Goal and Balance -- CONE
+  { 
+    /*  
+  case (3): //High Goal and Balance -- CONE
     std::cout << "TIME: " << time2 <<endl;
-    
+
     if (autoTime < 4.8_s)
     {
       arm.setPosition(3000);
+      drivetrain.driveDistance(-30_in);
       arm.brakeMode(true);
     }
     else if (autoTime < 5.8_s){
@@ -95,10 +99,10 @@ void Robot::AutonomousPeriodic()
     else if (autoTime < 9_s)
     {
       arm.setPosition(1000);
-      drivetrain.driveDistance(300_in);
+      drivetrain.driveDistance(325_in);
       intake.setSpeed(0);
     }
-    else if (autoTime < 10.1_s)
+    else if (autoTime < 9.1_s)
     {
       drivetrain.enableBrake(true);
     }
@@ -106,18 +110,19 @@ void Robot::AutonomousPeriodic()
     {
       drivetrain.drive(-0.6, -0.6);
     }
-    else if (autoTime < 30_s)
+    else if (autoTime < 15_s)
       drivetrain.autobalance();
-    
-  case (1): //2 Placements
-    if (autoTime < 2.8_s)
+      */
+    /*
+  case (2): //2 Placements
+  if (autoTime < 4.8_s)
     {
       arm.setPosition(3000);
-    }
-    else if (autoTime < 4_s)
-    {
-      intake.setSpeed(-0.8);
+      drivetrain.drive(-0.15, -0.15);
       arm.brakeMode(true);
+    }
+    else if (autoTime < 5.8_s){
+      intake.setSpeed(-0.8);
     }
     else if (autoTime < 7_s)
     {
@@ -126,44 +131,40 @@ void Robot::AutonomousPeriodic()
     }
     else if (autoTime < 11_s)
     {
-      drivetrain.turnToAngle(200);
-    }
-    else if (autoTime < 12_s)
-    {
-      arm.setPosition(6000); //ground pick up
-      intake.setSpeed(0.8);
-      drivetrain.driveDistance(50_in);
+      drivetrain.turnToAngle(180);
     }
     else if (autoTime < 13_s)
     {
-      intake.setSpeed(0);
-      drivetrain.turnToAngle(200);
+      intake.setSpeed(0.8);
+      arm.setPosition(6000); //ground pick up
+      drivetrain.driveDistance(25_in);
     }
     else if (autoTime < 15_s)
     {
-      drivetrain.driveDistance(-250_in);
+      intake.setSpeed(0);
+      drivetrain.turnToAngle(180);
     }
-    else if (autoTime < 30_s)
+    */
+  case (1): //High Goal and Balance -- CUBE
+    if (autoTime < 5_s)
     {
-      drivetrain.turnToAngle(40);
       arm.setPosition(3000);
+    }
+    else if (autoTime < 7_s){
+      drivetrain.driveDistance(-30_in);
+    }
+    else if (autoTime < 8.25_s)
+    {
       intake.setSpeed(-0.8);
     }
-    
-/*
-  case (3): //High Goal and Balance -- CUBE
-    if (autoTime < 4_s) 
-	    arm.setPosition(3000);
-    else if (autoTime < 6_s)
-      intake.setSpeed(0.7);
-    else if (autoTime < 8_s)
+    else if (autoTime < 13_s)
+    {
+      drivetrain.driveDistance(275_in);
       arm.setPosition(1000);
-    else if (autoTime < 11_s)
-      drivetrain.drive(.5, .5);
+    }
     else if (autoTime < 15_s)
-      drivetrain.autobalance();
-    break;
-
+      drivetrain.turnToAngle(90);
+    /*
     case (4): //High Goal and Move -- CUBE
     if (autoTime < 4_s) 
 	    arm.setPosition(3000);
@@ -215,6 +216,7 @@ void Robot::TeleopPeriodic()
 
   //toggle between cone preset heights and cube preset heights -- default is cube
   //if limelight, also toggle vision mode when aiming between tape and tags
+  /*
   if (controller.GetPOV() == 90)
     arm.toggleConeMode();
   if (controller.GetPOV() == 270)
@@ -228,8 +230,14 @@ void Robot::TeleopPeriodic()
   else if (controller.GetAButtonPressed())
       armSetPoint = 6000; //ground goal
   lastPosition = arm.getPosition();
-
+  */
   //manual control overrides position control
+
+  if (controller.GetLeftBumperReleased())
+  {
+    Pneumatic.shiftGears();
+  }
+
   if (std::abs(controller.GetRightY()) > 0.3)
   {
     //manual control setpoint needed to not revert to the previous position once manual controls stop
@@ -275,14 +283,23 @@ void Robot::TeleopPeriodic()
 
 void Robot::DisabledInit() {
   drivetrain.enableBrake(true);
+  arm.resetEncoder();
   arm.brakeMode(true);
+  arm.setSpeed(0);
+  intake.setSpeed(0);
 }
 
 
 
 
 
-void Robot::DisabledPeriodic() {}
+void Robot::DisabledPeriodic() 
+{
+  if (controller.GetAButtonPressed())
+    arm.resetEncoder();
+  std::cout << arm.getPosition() << endl;
+  std::cout << gyro.GetPitch() << endl;
+}
 
 
 
@@ -304,7 +321,6 @@ void Robot::TestPeriodic() {
   if (controller.GetAButtonPressed())
     arm.resetEncoder();
   std::cout << arm.getPosition() << endl;
-  //std::cout << gyro.getPitch() << endl;
 }
 
 
