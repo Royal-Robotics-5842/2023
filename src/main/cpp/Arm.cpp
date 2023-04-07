@@ -18,9 +18,9 @@ Arm::Arm()
     mArmEncoder.SetPosition(0);
     mArmEncoder.SetPositionConversionFactor(360/Constants::kArmGearRatio);
 
-    mLeftArmController.SetP(0.075); //0.052272
+    mLeftArmController.SetP(0.2); //0.052272
     mLeftArmController.SetI(0);
-    mLeftArmController.SetD(0.052105);
+    mLeftArmController.SetD(0);
     mLeftArmController.SetFF(0);
     mLeftArmController.SetIZone(0);
 
@@ -115,7 +115,7 @@ void Arm::setPosition(int preset)
                 position = mConeMode ? -124.9 : -124.9;
                 break;
             case 3000: //high goal
-                position = mConeMode ? -147 : -147;
+                position = mConeMode ? -180 : -180;
                 break;
             case 4000: //human player
                 position = mConeMode ? -31.8 : -31.8; //-33.3 : -33.3

@@ -79,13 +79,13 @@ void Robot::AutonomousInit()
 void Robot::AutonomousPeriodic() 
 {
   units::second_t autoTime = t.Get();
-  double time2 = autoTime/1_s;
+  //double time2 = autoTime/1_s;
   
   switch (auton)
-  { 
-    /*  
-  case (3): //High Goal and Balance -- CONE
-    std::cout << "TIME: " << time2 <<endl;
+  {  
+  /* 
+  case (1): //21 Point
+    //std::cout << "TIME: " << time2 <<endl;
 
     if (autoTime < 4.8_s)
     {
@@ -99,7 +99,7 @@ void Robot::AutonomousPeriodic()
     else if (autoTime < 9_s)
     {
       arm.setPosition(1000);
-      drivetrain.driveDistance(325_in);
+      drivetrain.driveDistance(350_in);
       intake.setSpeed(0);
     }
     else if (autoTime < 9.1_s)
@@ -113,57 +113,45 @@ void Robot::AutonomousPeriodic()
     else if (autoTime < 15_s)
       drivetrain.autobalance();
       */
-    /*
-  case (2): //2 Placements
-  if (autoTime < 4.8_s)
+  /*  
+  case (1): //18 Poiint
+  if (autoTime < 6_s)
     {
       arm.setPosition(3000);
-      drivetrain.drive(-0.15, -0.15);
+      drivetrain.driveDistance(-30_in);
       arm.brakeMode(true);
     }
-    else if (autoTime < 5.8_s){
+    else if (autoTime < 7_s){
       intake.setSpeed(-0.8);
     }
-    else if (autoTime < 7_s)
+   else if (autoTime < 9_s)
     {
       arm.setPosition(1000);
-      drivetrain.driveDistance(300_in);
-    }
-    else if (autoTime < 11_s)
-    {
-      drivetrain.turnToAngle(180);
-    }
-    else if (autoTime < 13_s)
-    {
-      intake.setSpeed(0.8);
-      arm.setPosition(6000); //ground pick up
-      drivetrain.driveDistance(25_in);
+      drivetrain.driveDistance(75_in);
     }
     else if (autoTime < 15_s)
     {
-      intake.setSpeed(0);
-      drivetrain.turnToAngle(180);
-    }
-    */
-  case (1): //High Goal and Balance -- CUBE
-    if (autoTime < 5_s)
+      drivetrain.autobalance();
+  */
+  
+  case (1): //Side Piece and +3
+    if (autoTime < 6_s)
     {
       arm.setPosition(3000);
+      arm.brakeMode(true);
     }
-    else if (autoTime < 7_s){
-      drivetrain.driveDistance(-30_in);
+    else if (autoTime < 9_s){
+      drivetrain.driveDistance(-50_in);
     }
-    else if (autoTime < 8.25_s)
+    else if (autoTime < 9.25_s)
     {
       intake.setSpeed(-0.8);
     }
     else if (autoTime < 13_s)
     {
-      drivetrain.driveDistance(275_in);
+      drivetrain.driveDistance(270_in);
       arm.setPosition(1000);
     }
-    else if (autoTime < 15_s)
-      drivetrain.turnToAngle(90);
     /*
     case (4): //High Goal and Move -- CUBE
     if (autoTime < 4_s) 
