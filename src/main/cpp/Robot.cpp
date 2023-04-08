@@ -113,27 +113,31 @@ void Robot::AutonomousPeriodic()
     else if (autoTime < 15_s)
       drivetrain.autobalance();
       */
-  /*  
+  /*/
   case (1): //18 Poiint
-  if (autoTime < 6_s)
+  if (autoTime > 3_s && autoTime < 7_s)
+    {
+      drivetrain.driveDistance(-35_in);
+    }
+  else if (autoTime < 5_s)
     {
       arm.setPosition(3000);
-      drivetrain.driveDistance(-30_in);
       arm.brakeMode(true);
     }
-    else if (autoTime < 7_s){
+    else if (autoTime < 8_s){
       intake.setSpeed(-0.8);
     }
-   else if (autoTime < 9_s)
+   else if (autoTime < 10_s)
     {
       arm.setPosition(1000);
-      drivetrain.driveDistance(75_in);
+      drivetrain.driveDistance(85_in);
     }
     else if (autoTime < 15_s)
     {
       drivetrain.autobalance();
-  */
-  
+    }
+    */
+      
   case (1): //Side Piece and +3
     if (autoTime < 6_s)
     {

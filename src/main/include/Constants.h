@@ -50,7 +50,7 @@ public:
     static constexpr double kWheelDiameter = 0.1524;
 
     static constexpr double kTurnP = 1/180; //max output/max error
-    static constexpr double kAutoP = 3.6/15;
+    static constexpr double kAutoP = 3.6/13;
 
     static constexpr auto kArmS = 0.12855 * 1_V;
     static constexpr auto kArmG = 0.14945 * 1_V;
